@@ -172,10 +172,19 @@ export function HeaderResponsive() {
               Home
             </Link>
             <Link href="#" className={classes.link}>
-              Learn
+              Updates
             </Link>
             <Link href="#" className={classes.link}>
-              Academy
+              Testimonials
+            </Link>
+            <Link href="#" className={classes.link}>
+              About us
+            </Link>
+            <Link href="#" className={classes.link}>
+              Gallery
+            </Link>
+            <Link href="#" className={classes.link}>
+              Contact
             </Link>
           </Group>
 
@@ -211,10 +220,19 @@ export function HeaderResponsive() {
             Home
           </Link>
           <Link href="#" className={classes.link}>
-            Learn
+            Updates
           </Link>
           <Link href="#" className={classes.link}>
-            Academy
+            Testimonials
+          </Link>
+          <Link href="#" className={classes.link}>
+            About us
+          </Link>
+          <Link href="#" className={classes.link}>
+            Gallery
+          </Link>
+          <Link href="#" className={classes.link}>
+            Contact
           </Link>
 
           <Divider
