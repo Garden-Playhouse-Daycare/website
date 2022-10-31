@@ -2,8 +2,10 @@ import Head from "next/head";
 import { HeroText } from "../components/HeroSection/HeroText";
 import Image from "next/image";
 import MainImg from "../public/MainImg.webp";
+import { Title, createStyles, MantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { HeaderResponsive } from "../components/HeaderResponsive";
+import { ArticlesCardsGrid } from "../components/ArticleCardsGrid";
 
 export default function Home() {
   const mobileMatch = useMediaQuery("(max-width: 565px)");
@@ -11,20 +13,39 @@ export default function Home() {
   return (
     <>
       <HeaderResponsive />
-      <HeroText />
-      <Image
+      {mobileMatch && <Image
         src={MainImg}
         alt="An image of the daycare and preschool showing the play area"
         style={{
           display: "block",
           marginLeft: "auto",
           marginRight: "auto",
-          maxWidth: !mobileMatch ? "80%" : "90%",
+          maxWidth: "90%",
+          width: `${1080 / 1.25}px`,
+          height: "auto",
+          borderRadius: "1em",
+          marginBottom: "2em",
+        }}
+      />}
+      <HeroText />
+      {!mobileMatch && <Image
+        src={MainImg}
+        alt="An image of the daycare and preschool showing the play area"
+        style={{
+          display: "block",
+          marginLeft: "auto",
+          marginRight: "auto",
+          maxWidth: "80%",
           width: `${1080 / 1.25}px`,
           height: "auto",
           borderRadius: "1em",
         }}
-      />
+      />}
+      
+      <Title mt={90} align="center" weight={800}>
+        Recent Updates
+      </Title>
+      <ArticlesCardsGrid />
     </>
   );
 }

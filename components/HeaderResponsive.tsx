@@ -87,13 +87,13 @@ const useStyles = createStyles((theme) => ({
   },
 
   hiddenMobile: {
-    [theme.fn.smallerThan("sm")]: {
+    [theme.fn.smallerThan("md")]: {
       display: "none",
     },
   },
 
   hiddenDesktop: {
-    [theme.fn.largerThan("sm")]: {
+    [theme.fn.largerThan("md")]: {
       display: "none",
     },
   },
