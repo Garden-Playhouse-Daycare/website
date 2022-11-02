@@ -118,7 +118,7 @@ export function Gallery() {
     <Carousel
       slideSize="50%"
       breakpoints={[{ maxWidth: "sm", slideSize: "100%", slideGap: 2 }]}
-      slideGap="xl"
+      slideGap="xs"
       align="start"
       loop
       slidesToScroll={mobile ? 1 : 2}
