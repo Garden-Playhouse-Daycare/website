@@ -8,6 +8,7 @@ import { HeaderResponsive } from "../components/HeaderResponsive";
 import { ArticlesCardsGrid } from "../components/ArticleCardsGrid";
 import { ReviewsGrid } from "../components/Testimonials/ReviewsGrid";
 import { AboutPage } from "../components/About/AboutPage";
+import { Gallery } from "../components/Gallery";
 
 export default function Home() {
   const mobileMatch = useMediaQuery("(max-width: 565px)");
@@ -62,6 +63,10 @@ export default function Home() {
         About Us
       </Title>
       <AboutPage />
+      <Title mt={90} mb="xl" align="center" weight={800}>
+        Gallery
+      </Title>
+      <Gallery />
     </>
   );
 }
