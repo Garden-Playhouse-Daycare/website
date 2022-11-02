@@ -7,6 +7,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { HeaderResponsive } from "../components/HeaderResponsive";
 import { ArticlesCardsGrid } from "../components/ArticleCardsGrid";
 import { ReviewsGrid } from "../components/Testimonials/ReviewsGrid";
+import { AboutPage } from "../components/About/AboutPage";
 
 export default function Home() {
   const mobileMatch = useMediaQuery("(max-width: 565px)");
@@ -28,6 +29,7 @@ export default function Home() {
             borderRadius: "1em",
             marginBottom: "2em",
           }}
+          priority
         />
       )}
       <HeroText />
@@ -44,6 +46,7 @@ export default function Home() {
             height: "auto",
             borderRadius: "1em",
           }}
+          priority
         />
       )}
 
@@ -55,6 +58,10 @@ export default function Home() {
         Testimonials
       </Title>
       <ReviewsGrid />
+      <Title mt={90} mb="xl" align="center" weight={800}>
+        About Us
+      </Title>
+      <AboutPage />
     </>
   );
 }
