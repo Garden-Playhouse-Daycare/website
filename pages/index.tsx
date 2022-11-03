@@ -16,7 +16,6 @@ import { ArticlesCardsGrid } from "../components/ArticleCardsGrid";
 import { ReviewsGrid } from "../components/Testimonials/ReviewsGrid";
 import { AboutPage } from "../components/About/AboutPage";
 import { Gallery } from "../components/Gallery";
-import GoogleMapReact from "google-map-react";
 
 export default function Home() {
   const theme = useMantineTheme();
@@ -82,8 +81,8 @@ export default function Home() {
       <Center mx="xl">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.6875863246482!2d-121.97052370000002!3d37.5624237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fc08b2b3a4f33%3A0x64205c0be4fdf63c!2sGarden%20Playhouse%20Daycare!5e0!3m2!1sen!2sus!4v1667435303590!5m2!1sen!2sus"
-          width={!mobileMatch ? "80%" : "100%"}
-          height={!mobileMatch ? 600 : 400}
+          width={!mobileMatch ? "70%" : "100%"}
+          height={!mobileMatch ? 500 : 400}
           style={{ border: 0, borderRadius: "2%", display: "block" }}
           allowFullScreen={undefined}
           loading="lazy"
