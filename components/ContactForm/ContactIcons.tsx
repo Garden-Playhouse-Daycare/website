@@ -89,10 +89,10 @@ interface ContactIconsListProps {
 }
 
 const MOCKDATA = [
-  { title: "Email", description: "hello@mantine.dev", icon: IconAt },
-  { title: "Phone", description: "+49 (800) 335 35 35", icon: IconPhone },
-  { title: "Address", description: "844 Morris Park avenue", icon: IconMapPin },
-  { title: "Working hours", description: "8 a.m. – 11 p.m.", icon: IconSun },
+  { title: "Email", description: "garden.playhouse.daycare@gmail.com", icon: IconAt },
+  { title: "Phone", description: "+1 (510) 556 7291", icon: IconPhone },
+  { title: "Address", description: "38846 Cherry Glen Common, Fremont, CA 94536", icon: IconMapPin },
+  { title: "Working hours", description: "8:30 a.m. – 5:30 p.m.", icon: IconSun },
 ];
 
 export function ContactIconsList({
