@@ -60,23 +60,23 @@ export default function Home() {
         />
       )}
 
-      <Title mt={90} align="center" weight={800} id="updates">
+      <Title mt={!mobileMatch ? 90 : 10} align="center" weight={800} id="updates">
         Recent Updates
       </Title>
       <ArticlesCardsGrid />
-      <Title mt={90} mb="xl" align="center" weight={800} id="testimonials">
+      <Title mt={!mobileMatch ? 90 : 25} mb={!mobileMatch ? "xl" : undefined} align="center" weight={800} id="testimonials">
         Testimonials
       </Title>
       <ReviewsGrid />
-      <Title mt={90} mb="xl" align="center" weight={800} id="about">
+      <Title mt={!mobileMatch ? 90 : 60} mb="xl" align="center" weight={800} id="about">
         About Us
       </Title>
       <AboutPage />
-      <Title mt={90} mb="xl" align="center" weight={800} id="gallery">
+      <Title mt={!mobileMatch ? 90 : 70} mb="xl" align="center" weight={800} id="gallery">
         Gallery
       </Title>
       <Gallery />
-      <Title mt={90} mb="xl" align="center" weight={800} id="contact">
+      <Title mt={!mobileMatch ? 90 : 90} mb="xl" align="center" weight={800} id="contact">
         Contact Us
       </Title>
       <Center mx="xl" mb={40}>
