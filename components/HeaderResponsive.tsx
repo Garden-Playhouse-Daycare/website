@@ -168,7 +168,7 @@ export function HeaderResponsive() {
             spacing={0}
             className={classes.hiddenMobile}
           >
-            <Link href="/" className={classes.link}>
+            <Link href="/" className={classes.link} replace>
               Home
             </Link>
             <Link href="#updates" className={classes.link} scroll={false} replace>
@@ -216,22 +216,22 @@ export function HeaderResponsive() {
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
 
-          <Link href="#" className={classes.link}>
+          <Link href="/" className={classes.link} onClick={closeDrawer} replace>
             Home
           </Link>
-          <Link href="#" className={classes.link}>
+          <Link href="#updates" className={classes.link} scroll={false} replace onClick={closeDrawer}>
             Updates
           </Link>
-          <Link href="#" className={classes.link}>
+          <Link href="#testimonials" className={classes.link} scroll={false} replace onClick={closeDrawer}>
             Testimonials
           </Link>
-          <Link href="#" className={classes.link}>
+          <Link href="#about" className={classes.link} scroll={false} replace onClick={closeDrawer}>
             About us
           </Link>
-          <Link href="#" className={classes.link}>
+          <Link href="#gallery" className={classes.link} scroll={false} replace onClick={closeDrawer}>
             Gallery
           </Link>
-          <Link href="#" className={classes.link}>
+          <Link href="#contact" className={classes.link} scroll={false} replace onClick={closeDrawer}>
             Contact
           </Link>
 
