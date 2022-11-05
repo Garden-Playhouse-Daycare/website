@@ -168,22 +168,22 @@ export function HeaderResponsive() {
             spacing={0}
             className={classes.hiddenMobile}
           >
-            <Link href="#" className={classes.link}>
+            <Link href="/" className={classes.link}>
               Home
             </Link>
-            <Link href="#" className={classes.link}>
+            <Link href="#updates" className={classes.link} scroll={false} replace>
               Updates
             </Link>
-            <Link href="#" className={classes.link}>
+            <Link href="#testimonials" className={classes.link} scroll={false} replace>
               Testimonials
             </Link>
-            <Link href="#" className={classes.link}>
+            <Link href="#about" className={classes.link} scroll={false} replace>
               About us
             </Link>
-            <Link href="#" className={classes.link}>
+            <Link href="#gallery" className={classes.link} scroll={false} replace>
               Gallery
             </Link>
-            <Link href="#" className={classes.link}>
+            <Link href="#contact" className={classes.link} scroll={false} replace>
               Contact
             </Link>
           </Group>
