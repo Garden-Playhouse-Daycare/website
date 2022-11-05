@@ -60,24 +60,58 @@ export default function Home() {
         />
       )}
 
-      <Title mt={!mobileMatch ? 90 : 10} align="center" weight={800} id="updates">
+      <Title
+        mt={!mobileMatch ? 70 : 10}
+        align="center"
+        weight={800}
+        style={{ position: "relative" }}
+      >
         Recent Updates
+        <span id="updates" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
       </Title>
       <ArticlesCardsGrid />
-      <Title mt={!mobileMatch ? 90 : 25} mb={!mobileMatch ? "xl" : undefined} align="center" weight={800} id="testimonials">
+      <Title
+        mt={!mobileMatch ? 50 : 25}
+        mb="md"
+        align="center"
+        weight={800}
+        style={{ position: "relative" }}
+      >
         Testimonials
+        <span id="testimonials" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
       </Title>
       <ReviewsGrid />
-      <Title mt={!mobileMatch ? 90 : 60} mb="xl" align="center" weight={800} id="about">
+      <Title
+        mt={!mobileMatch ? 50 : 60}
+        mb="xl"
+        align="center"
+        weight={800}
+        style={{ position: "relative" }}
+      >
         About Us
+        <span id="about" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
       </Title>
       <AboutPage />
-      <Title mt={!mobileMatch ? 90 : 70} mb="xl" align="center" weight={800} id="gallery">
+      <Title
+        mt={!mobileMatch ? 80 : 70}
+        mb="xl"
+        align="center"
+        weight={800}
+        style={{ position: "relative" }}
+      >
         Gallery
+        <span id="gallery" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
       </Title>
       <Gallery />
-      <Title mt={!mobileMatch ? 90 : 90} mb="xl" align="center" weight={800} id="contact">
+      <Title
+        mt={!mobileMatch ? 90 : 90}
+        mb="xl"
+        align="center"
+        weight={800}
+        style={{ position: "relative" }}
+      >
         Contact Us
+        <span id="contact" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
       </Title>
       <Center mx="xl" mb={40}>
         <iframe
