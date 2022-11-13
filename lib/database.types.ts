@@ -1,0 +1,57 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json }
+  | Json[]
+
+export interface Database {
+  public: {
+    Tables: {
+      update_tags: {
+        Row: {
+          id: number
+          tags: string
+        }
+        Insert: {
+          id?: number
+          tags?: string
+        }
+        Update: {
+          id?: number
+          tags?: string
+        }
+      }
+      updates: {
+        Row: {
+          date: string | null
+          desc: string | null
+          tag: string | null
+          id: number
+        }
+        Insert: {
+          date?: string | null
+          desc?: string | null
+          tag?: string | null
+          id?: number
+        }
+        Update: {
+          date?: string | null
+          desc?: string | null
+          tag?: string | null
+          id?: number
+        }
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+  }
+}

@@ -8,6 +8,10 @@ import {
   Button,
   useMantineTheme,
 } from "@mantine/core";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useEffect, useState } from "react";
+import { GetServerSidePropsContext, NextPage } from "next";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -107,6 +111,8 @@ const data = [
 
 export function Gallery() {
   const theme = useMantineTheme();
+  const supabase = useSupabaseClient();
+
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const slides = data.map((item) => (
     <Carousel.Slide key={item.title}>

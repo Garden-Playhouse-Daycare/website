@@ -17,8 +17,15 @@ import { ReviewsGrid } from "../components/Testimonials/ReviewsGrid";
 import { AboutPage } from "../components/About/AboutPage";
 import { Gallery } from "../components/Gallery";
 import { Contact } from "../components/ContactForm/Contact";
+import { Database } from '../lib/database.types'
+import { GetServerSidePropsContext } from "next";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-export default function Home() {
+interface Props {
+  updateData: any[] | null;
+  updateImages: any[];
+}
+export default function Home({ updateData, updateImages }: Props) {
   const theme = useMantineTheme();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
 
@@ -67,9 +74,12 @@ export default function Home() {
         style={{ position: "relative" }}
       >
         Recent Updates
-        <span id="updates" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
+        <span
+          id="updates"
+          style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
+        />
       </Title>
-      <ArticlesCardsGrid />
+      <ArticlesCardsGrid updateData={updateData}  />
       <Title
         mt={!mobileMatch ? 50 : 25}
         mb="md"
@@ -78,7 +88,10 @@ export default function Home() {
         style={{ position: "relative" }}
       >
         Testimonials
-        <span id="testimonials" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
+        <span
+          id="testimonials"
+          style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
+        />
       </Title>
       <ReviewsGrid />
       <Title
@@ -89,7 +102,10 @@ export default function Home() {
         style={{ position: "relative" }}
       >
         About Us
-        <span id="about" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
+        <span
+          id="about"
+          style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
+        />
       </Title>
       <AboutPage />
       <Title
@@ -100,7 +116,10 @@ export default function Home() {
         style={{ position: "relative" }}
       >
         Gallery
-        <span id="gallery" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
+        <span
+          id="gallery"
+          style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
+        />
       </Title>
       <Gallery />
       <Title
@@ -111,7 +130,10 @@ export default function Home() {
         style={{ position: "relative" }}
       >
         Contact Us
-        <span id="contact" style={{ position: "absolute", top: "-60px", visibility: "hidden" }} />
+        <span
+          id="contact"
+          style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
+        />
       </Title>
       <Center mx="xl" mb={40}>
         <iframe
@@ -128,3 +150,43 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const supabase = createServerSupabaseClient<Database>(ctx);
+  const { data: updateData } = await supabase.from("updates").select("*");
+  const imagesList: any[] = [];
+  const updateImages: any[] = [];
+  
+  // if (updateData) {
+  //   for (const article of updateData) {
+  //     const year = article.date?.split("-")[0];
+  //     const { data } = await supabase.storage
+  //       .from("updates")
+  //       .list(`${year}${article.tag}`);
+  //     // const { data: updateImages } = await supabase.storage
+  //     //   .from("updates")
+  //     //   .download(`${year}${article.tag}`);
+  //     if (data) {
+  //       const imagesTagged = [...data, `${year}${article.tag}`];
+  //       imagesList.indexOf(data) === -1 && imagesList.push(imagesTagged);
+  //     }
+  //   }
+
+  //   for (const update of imagesList) {
+  //     const tag = `${update[update.length - 1]}`;
+  //     console.log(update);
+  //     for (const image of update) {
+  //       if (image.name) {
+  //         const { data } = await supabase.storage.from("updates").download(`${tag}/${image.name}`);
+  //         updateImages.indexOf(data) === -1 && imagesList.push(data);
+  //       }
+  //     }
+  //   }
+  // }
+
+  return {
+    props: {
+      updateData: updateData ?? [],
+    },
+  };
+};
