@@ -17,17 +17,38 @@ import { ReviewsGrid } from "../components/Testimonials/ReviewsGrid";
 import { AboutPage } from "../components/About/AboutPage";
 import { Gallery } from "../components/Gallery";
 import { Contact } from "../components/ContactForm/Contact";
-import { Database } from '../lib/database.types'
+import { Database } from "../lib/database.types";
 import { GetServerSidePropsContext } from "next";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useEffect } from "react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 interface Props {
   updateData: any[] | null;
   updateImages: any[];
 }
+
 export default function Home({ updateData, updateImages }: Props) {
   const theme = useMantineTheme();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
+  const supabase = useSupabaseClient();
+
+  useEffect(() => {
+    const login = async () => {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (!data.user) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: "manas.nagelia@gmail.com",
+          password: process.env.NEXT_PUBLIC_PASSWORD!,
+        });
+
+        if (error) console.log(error);
+      }
+    };
+
+    login();
+  }, [supabase]);
 
   return (
     <>
@@ -79,7 +100,7 @@ export default function Home({ updateData, updateImages }: Props) {
           style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
         />
       </Title>
-      <ArticlesCardsGrid updateData={updateData}  />
+      <ArticlesCardsGrid updateData={updateData} />
       <Title
         mt={!mobileMatch ? 50 : 25}
         mb="md"
@@ -153,36 +174,11 @@ export default function Home({ updateData, updateImages }: Props) {
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient<Database>(ctx);
-  const { data: updateData } = await supabase.from("updates").select("*");
-  const imagesList: any[] = [];
-  const updateImages: any[] = [];
-  
-  // if (updateData) {
-  //   for (const article of updateData) {
-  //     const year = article.date?.split("-")[0];
-  //     const { data } = await supabase.storage
-  //       .from("updates")
-  //       .list(`${year}${article.tag}`);
-  //     // const { data: updateImages } = await supabase.storage
-  //     //   .from("updates")
-  //     //   .download(`${year}${article.tag}`);
-  //     if (data) {
-  //       const imagesTagged = [...data, `${year}${article.tag}`];
-  //       imagesList.indexOf(data) === -1 && imagesList.push(imagesTagged);
-  //     }
-  //   }
-
-  //   for (const update of imagesList) {
-  //     const tag = `${update[update.length - 1]}`;
-  //     console.log(update);
-  //     for (const image of update) {
-  //       if (image.name) {
-  //         const { data } = await supabase.storage.from("updates").download(`${tag}/${image.name}`);
-  //         updateImages.indexOf(data) === -1 && imagesList.push(data);
-  //       }
-  //     }
-  //   }
-  // }
+  const { data: updateData } = await supabase
+    .from("updates")
+    .select()
+    .order("date", { ascending: false })
+    .limit(4);
 
   return {
     props: {

@@ -7,7 +7,7 @@ import {
   Container,
   AspectRatio,
 } from "@mantine/core";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { Database } from "../lib/database.types";
 import { FileObject } from "../lib/FileObject";
@@ -65,9 +65,23 @@ export function ArticlesCardsGrid(props: Props) {
   const supabase = useSupabaseClient<Database>();
 
   useEffect(() => {
+    const fetchImagesFromDB = async () => {
+      if (props.updateData) {
+        let result = props.updateData.map((row) => row.id);
 
-    const fetchImages = async () => {
-      const imagesList: any[] = [];
+
+        const { data, error } = await supabase
+          .from("updates")
+          .select()
+          .in("id", result);
+        
+        if (error) console.log(error);
+        return data;
+      }
+    };
+
+    // use this code in admin center
+    const addDataToDB = async () => {
       if (props.updateData) {
         for (const article of props.updateData) {
           const year = article.date?.split("-")[0];
@@ -75,23 +89,34 @@ export function ArticlesCardsGrid(props: Props) {
             .from("updates")
             .list(`${year}${article.tag}`);
 
-          const tempImgList: any[] = [];
+          const imageList: string[] = [];
 
           for (const image of data!) {
-            const { data: updateImages } = await supabase.storage
+            const { data } = supabase.storage
               .from("updates")
-              .download(`${year}${article.tag}/${image.name}`);
+              .getPublicUrl(`${year}${article.tag}/${image.name}`);
 
-            tempImgList.indexOf(updateImages) === -1 && tempImgList.push(updateImages);
+            const publicUrl = data.publicUrl;
+
+            imageList.indexOf(publicUrl) === -1 && imageList.push(publicUrl);
           }
 
-          if (tempImgList) {
-            const imagesTagged = [...tempImgList, `${year}${article.tag}`];
-            imagesList.indexOf(imagesTagged) === -1 && imagesList.push(imagesTagged);
-          }
+          const { data: insertData, error } = await supabase
+            .from("updates")
+            .update({ image: imageList })
+            .eq("id", article.id);
+          if (error) console.log(error);
         }
+      }
+    };
 
-        console.log(imagesList);
+    const fetchImages = async () => {
+      const data = await fetchImagesFromDB();
+      if (!data) {
+        console.log("Didn't find data in database. Re-adding data...")
+        addDataToDB();
+      } else {
+        console.log("Data found!")
       }
     };
 

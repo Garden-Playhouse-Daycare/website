@@ -29,18 +29,21 @@ export interface Database {
           desc: string | null
           tag: string | null
           id: number
+          image: string[] | null
         }
         Insert: {
           date?: string | null
           desc?: string | null
           tag?: string | null
           id?: number
+          image?: string[] | null
         }
         Update: {
           date?: string | null
           desc?: string | null
           tag?: string | null
           id?: number
+          image?: string[] | null
         }
       }
     }
