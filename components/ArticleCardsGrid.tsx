@@ -2,15 +2,17 @@ import {
   createStyles,
   SimpleGrid,
   Card,
-  Image,
   Text,
   Container,
   AspectRatio,
+  Image,
+  Loader,
 } from "@mantine/core";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { Database } from "../lib/database.types";
 import { FileObject } from "../lib/FileObject";
+import { Carousel } from "@mantine/carousel";
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
 const mockdata = [
@@ -40,7 +42,7 @@ const mockdata = [
   },
 ];
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme, _params, getRef) => ({
   card: {
     transition: "transform 150ms ease, box-shadow 150ms ease",
 
@@ -54,29 +56,76 @@ const useStyles = createStyles((theme) => ({
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     fontWeight: 600,
   },
+
+  carousel: {
+    "&:hover": {
+      [`& .${getRef("carouselControls")}`]: {
+        opacity: 1,
+      },
+    },
+  },
+
+  carouselControls: {
+    ref: getRef("carouselControls"),
+    transition: "opacity 150ms ease",
+    opacity: 0,
+  },
+
+  carouselIndicator: {
+    width: 4,
+    height: 4,
+    transition: "width 250ms ease",
+
+    "&[data-active]": {
+      width: 16,
+    },
+  },
 }));
 
 interface Props {
   updateData: Updates[] | null;
 }
 
+// const images = [
+//   "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80",
+//   "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80",
+//   "https://images.unsplash.com/photo-1605774337664-7a846e9cdf17?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80",
+//   "https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80",
+//   "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80",
+// ];
+
 export function ArticlesCardsGrid(props: Props) {
   const { classes } = useStyles();
   const supabase = useSupabaseClient<Database>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchImagesFromDB = async () => {
+    // each one is null so just return null direct
+    const fetchImagesFromDB = async (image: boolean) => {
       if (props.updateData) {
         let result = props.updateData.map((row) => row.id);
 
+        if (image) {
+          const { data, error } = await supabase
+            .from("updates")
+            .select("image")
+            .in("id", result);
+          if (error) console.log(error);
 
-        const { data, error } = await supabase
-          .from("updates")
-          .select()
-          .in("id", result);
-        
-        if (error) console.log(error);
-        return data;
+          const notNull = data?.filter((row) => row.image);
+          if (notNull && notNull.length != 0) {
+            return data;
+          } else {
+            return null;
+          }
+        } else {
+          const { data, error } = await supabase
+            .from("updates")
+            .select("image")
+            .in("id", result);
+          if (error) console.log(error);
+          return data;
+        }
       }
     };
 
@@ -103,7 +152,7 @@ export function ArticlesCardsGrid(props: Props) {
 
           const { data: insertData, error } = await supabase
             .from("updates")
-            .update({ image: imageList })
+            .update({ image: imageList, alt: "Sample Alt" })
             .eq("id", article.id);
           if (error) console.log(error);
         }
@@ -111,30 +160,54 @@ export function ArticlesCardsGrid(props: Props) {
     };
 
     const fetchImages = async () => {
-      const data = await fetchImagesFromDB();
-      if (!data) {
-        console.log("Didn't find data in database. Re-adding data...")
-        addDataToDB();
-      } else {
-        console.log("Data found!")
-      }
+      const data = await fetchImagesFromDB(true);
+
+      if (data) setLoading(false);
+      // if (!data) {
+      //   console.log("Didn't find data in database. Re-adding data...");
+      //   await addDataToDB();
+      //   const images = await fetchImagesFromDB(false);
+      //   setLoading(false);
+      // } else {
+      //   console.log("Data found!");
+      //   setLoading(false);
+      // }
+
+      // TODO Add carousel to images with array
     };
 
-    fetchImages();
+    //fetchImages();
   }, [supabase, props.updateData]);
 
   if (props.updateData != null) {
     const cards = props.updateData.map((article) => (
-      <Card
-        key={article.id}
-        p="md"
-        radius="md"
-        component="a"
-        href="#"
-        className={classes.card}
-      >
+      <Card key={article.id} p="md" radius="md" className={classes.card}>
         <AspectRatio ratio={1920 / 1080}>
-          <Image src={article.image} alt="something" />
+          <Card.Section>
+            <Carousel
+              withIndicators
+              classNames={{
+                root: classes.carousel,
+                controls: classes.carouselControls,
+                indicator: classes.carouselIndicator,
+              }}
+            >
+              {!loading ? (
+                article.image?.map((rowImage) => (
+                  <Carousel.Slide key={Math.random()}>
+                    <Image
+                      src={rowImage}
+                      height={220}
+                      alt="Image"
+                    />
+                  </Carousel.Slide>
+                ))
+              ) : (
+                <Loader />
+              )}
+            </Carousel>
+          </Card.Section>
+          {/* <Image src={article.image} alt="something" /> */}
         </AspectRatio>
         <Text
           color="dimmed"
@@ -148,6 +221,7 @@ export function ArticlesCardsGrid(props: Props) {
         <Text mt={5}>{article.desc}</Text>
       </Card>
     ));
+
     return (
       <Container py="xl">
         <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>

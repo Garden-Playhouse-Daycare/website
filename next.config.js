@@ -2,6 +2,17 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ouuvrfmbebexnjriyvmt.supabase.co',
+        port: '',
+        pathname: "/storage/v1/object/**",
+      },
+    ],
+  },
+
 }
 
 module.exports = nextConfig
