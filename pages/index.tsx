@@ -39,7 +39,6 @@ export default function Home({ updateData, updateImages }: Props) {
   useEffect(() => {
     const login = async () => {
       const { data, error } = await supabase.auth.getSession();
-      console.log(process.env.NEXT_PUBLIC_PASSWORD);
 
       if (!data.session) {
         const { data, error } = await supabase.auth.signInWithPassword({
