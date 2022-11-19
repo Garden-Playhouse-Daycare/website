@@ -5,14 +5,17 @@ import {
   Text,
   Container,
   AspectRatio,
-  Image,
   Loader,
+  Image as MantineImage,
+  Center,
 } from "@mantine/core";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { Database } from "../lib/database.types";
 import { FileObject } from "../lib/FileObject";
 import { Carousel } from "@mantine/carousel";
+import Image from "next/image";
+
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
 const mockdata = [
@@ -195,11 +198,20 @@ export function ArticlesCardsGrid(props: Props) {
               {!loading ? (
                 article.image?.map((rowImage) => (
                   <Carousel.Slide key={Math.random()}>
-                    <Image
-                      src={rowImage}
-                      height={220}
-                      alt="Image"
-                    />
+                    <Center>
+                      <Image
+                        src={rowImage}
+                        alt={article.alt ?? "An image depicting a holiday"}
+                        height="0"
+                        width="0"
+                        sizes="15vw"
+                        style={{
+                          width: "100%",
+                          height: 220,
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Center>
                   </Carousel.Slide>
                 ))
               ) : (

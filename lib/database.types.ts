@@ -30,6 +30,7 @@ export interface Database {
           tag: string | null
           id: number
           image: string[] | null
+          alt: string | null
         }
         Insert: {
           date?: string | null
@@ -37,6 +38,7 @@ export interface Database {
           tag?: string | null
           id?: number
           image?: string[] | null
+          alt?: string | null
         }
         Update: {
           date?: string | null
@@ -44,6 +46,7 @@ export interface Database {
           tag?: string | null
           id?: number
           image?: string[] | null
+          alt?: string | null
         }
       }
     }
