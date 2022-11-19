@@ -24,22 +24,22 @@ export default function App({
         />
       </Head>
 
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          /** Put your mantine theme override here */
-          colorScheme: "light",
-          primaryColor: "teal",
-        }}
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
       >
-        <SessionContextProvider
-          supabaseClient={supabaseClient}
-          initialSession={pageProps.initialSession}
+        <MantineProvider
+          withGlobalStyles
+          withNormalizeCSS
+          theme={{
+            /** Put your mantine theme override here */
+            colorScheme: "light",
+            primaryColor: "teal",
+          }}
         >
           <Component {...pageProps} />
-        </SessionContextProvider>
-      </MantineProvider>
+        </MantineProvider>
+      </SessionContextProvider>
     </>
   );
 }
