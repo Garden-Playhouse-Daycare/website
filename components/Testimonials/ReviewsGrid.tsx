@@ -37,7 +37,6 @@ interface Props {
 
 export function ReviewsGrid(props: Props) {
   const { classes } = useStyles();
-  console.log(props.data);
 
   const cards = props.data.map((review) => (
     <Review
