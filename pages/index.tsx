@@ -24,13 +24,15 @@ import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Router from "next/router";
+type Reviews = Database["public"]["Tables"]["reviews"]["Row"];
+type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
 interface Props {
-  updateData: any[] | null;
-  updateImages: any[];
+  updateData: Updates[] | [];
+  reviewData: Reviews[] | [];
 }
 
-export default function Home({ updateData, updateImages }: Props) {
+export default function Home({ updateData, reviewData }: Props) {
   const theme = useMantineTheme();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const supabase = useSupabaseClient();
@@ -99,7 +101,7 @@ export default function Home({ updateData, updateImages }: Props) {
           style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
         />
       </Title>
-      <ReviewsGrid />
+      <ReviewsGrid data={reviewData} />
       <Title
         mt={!mobileMatch ? 50 : 60}
         mb="xl"
@@ -159,15 +161,19 @@ export default function Home({ updateData, updateImages }: Props) {
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient<Database>(ctx);
+
   const { data: updateData } = await supabase
     .from("updates")
     .select()
     .order("date", { ascending: false })
     .limit(4);
 
+  const { data: reviewData } = await supabase.from("reviews").select();
+
   return {
     props: {
       updateData: updateData ?? [],
+      reviewData: reviewData ?? [],
     },
   };
 };

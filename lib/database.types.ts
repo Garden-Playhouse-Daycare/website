@@ -9,6 +9,29 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      reviews: {
+        Row: {
+          id: number
+          date: string | null
+          name: string | null
+          desc: string | null
+          profile: string | null
+        }
+        Insert: {
+          id?: number
+          date?: string | null
+          name?: string | null
+          desc?: string | null
+          profile?: string | null
+        }
+        Update: {
+          id?: number
+          date?: string | null
+          name?: string | null
+          desc?: string | null
+          profile?: string | null
+        }
+      }
       update_tags: {
         Row: {
           id: number
