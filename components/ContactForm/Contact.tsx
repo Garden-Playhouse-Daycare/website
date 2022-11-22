@@ -11,6 +11,10 @@ import {
 } from "@mantine/core";
 import { ContactIconsList } from "./ContactIcons";
 import bg from "./bg.svg";
+import { useState } from "react";
+import { showNotification } from "@mantine/notifications";
+import Router from "next/router";
+import { IconX, IconCheck } from "@tabler/icons";
 
 const useStyles = createStyles((theme: MantineTheme) => {
   const BREAKPOINT = theme.fn.smallerThan("sm");
@@ -112,6 +116,11 @@ const useStyles = createStyles((theme: MantineTheme) => {
 export function Contact() {
   const { classes } = useStyles();
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+
   return (
     <Paper shadow="md" radius="lg">
       <div className={classes.wrapper}>
@@ -130,7 +139,53 @@ export function Contact() {
 
         <form
           className={classes.form}
-          onSubmit={(event) => event.preventDefault()}
+          onSubmit={async (event) => {
+            event.preventDefault();
+
+            const data = {
+              subject: subject,
+              message: message,
+              email: email,
+              name: name,
+            };
+
+            const response = await fetch("/api/sendMessage", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            console.log("made it");
+
+            if (response.status === 200) {
+              showNotification({
+                title: "Message sent",
+                message: "Your message was successfully sent.",
+                icon: <IconCheck />,
+                color: "green",
+                autoClose: 2000,
+              });
+            } else {
+              showNotification({
+                title: "Failure",
+                message:
+                  "Your message couldn't be sent due to an internal error.",
+                icon: <IconX />,
+                color: "red",
+                autoClose: 2500,
+              });
+            }
+
+            setEmail("");
+            setMessage("");
+            setName("");
+            setSubject("");
+            Router.replace("/");
+          }}
+          method="post"
         >
           <Text size="lg" weight={700} className={classes.title}>
             Get in touch
@@ -138,21 +193,40 @@ export function Contact() {
 
           <div className={classes.fields}>
             <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
-              <TextInput label="Your name" placeholder="Your name" />
+              <TextInput
+                label="Your name"
+                required
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
               <TextInput
                 label="Your email"
                 placeholder="hello@gmail.com"
                 required
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </SimpleGrid>
 
-            <TextInput mt="md" label="Subject" placeholder="Subject" required />
+            <TextInput
+              mt="md"
+              label="Subject"
+              placeholder="Subject"
+              required
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            />
 
             <Textarea
               mt="md"
               label="Your message"
               placeholder="Please include all relevant information"
               minRows={3}
+              value={message}
+              required
+              onChange={(e) => setMessage(e.target.value)}
             />
 
             <Group position="right" mt="md">

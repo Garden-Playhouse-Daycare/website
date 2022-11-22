@@ -5,6 +5,7 @@ import "../styles/global.css";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
+import { NotificationsProvider } from "@mantine/notifications";
 
 export default function App({
   Component,
@@ -37,7 +38,9 @@ export default function App({
             primaryColor: "teal",
           }}
         >
-          <Component {...pageProps} />
+          <NotificationsProvider>
+            <Component {...pageProps} />
+          </NotificationsProvider>
         </MantineProvider>
       </SessionContextProvider>
     </>

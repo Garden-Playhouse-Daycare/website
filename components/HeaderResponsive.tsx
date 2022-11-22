@@ -97,6 +97,16 @@ const useStyles = createStyles((theme) => ({
       display: "none",
     },
   },
+
+  header: {
+    marginBottom: 0,
+    height: 0,
+  },
+
+  closeButton: {
+    marginTop: 35,
+    transform: "scale(1.5)",
+  },
 }));
 
 const mockdata = [
@@ -205,17 +215,12 @@ export function HeaderResponsive() {
         opened={drawerOpened}
         onClose={closeDrawer}
         size="100%"
-        padding="md"
-        title="Navigation"
+        classNames={{ header: classes.header, closeButton: classes.closeButton }}
         className={classes.hiddenDesktop}
         zIndex={1000000}
+        padding="md"
       >
-        <ScrollArea sx={{ height: "calc(100vh - 60px)" }} mx="-md">
-          <Divider
-            my="sm"
-            color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
-          />
-
+        <ScrollArea sx={{ height: "calc(100vh - 60px)" }} mx="-md" style={{ zIndex: -5}}>
           <Link href="/" className={classes.link} onClick={closeDrawer} replace>
             Home
           </Link>
