@@ -199,8 +199,7 @@ export function HeaderResponsive() {
           </Group>
 
           <Group className={classes.hiddenMobile}>
-            <Button>Contact Us</Button>
-            <Button variant="default">Call Us</Button>
+            <Button component="a" href="/#contact">Contact Us</Button>
           </Group>
 
           <Burger
@@ -247,7 +246,6 @@ export function HeaderResponsive() {
 
           <Group position="center" grow pb="xl" px="md">
             <Button>Contact us</Button>
-            <Button variant="default">Call us</Button>
           </Group>
         </ScrollArea>
       </Drawer>

@@ -125,7 +125,7 @@ export function HeroText(props: Props) {
         </Container>
 
         <div className={classes.controls}>
-          <Button className={classes.control} size="lg">
+          <Button component="a" href="#contact" className={classes.control} size="lg">
             Contact Us
           </Button>
         </div>

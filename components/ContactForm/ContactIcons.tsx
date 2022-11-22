@@ -77,7 +77,7 @@ function ContactIcon({
         <Text size="xs" className={classes.title}>
           {title}
         </Text>
-        <Text className={classes.description}>{description}</Text>
+        <Text className={classes.description} style={{ textDecoration: "none" }}>{description}</Text>
       </div>
     </div>
   );
