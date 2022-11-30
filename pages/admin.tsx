@@ -20,8 +20,8 @@ export default function Admin() {
   return (
     <Container
       size={420}
-      mt={40}
-      mb={!mobileMatch ? 150 : 130}
+      mt={30}
+      mb={!mobileMatch ? 120 : 100}
     >
       <Title
         align="center"
@@ -32,8 +32,11 @@ export default function Admin() {
       >
         Admin Login
       </Title>
+      <Text color="dimmed" size="sm" align="center" mt={5}>
+        If you&apos;re an admin of this </Text>
+
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput label="Email" placeholder="you@mantine.dev" required />
+        <TextInput label="Email" placeholder="you@example.com" required />
         <PasswordInput
           label="Password"
           placeholder="Your password"
