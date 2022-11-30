@@ -6,6 +6,8 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 import { NotificationsProvider } from "@mantine/notifications";
+import { Footer } from "../components/Footer";
+import { HeaderResponsive } from "../components/HeaderResponsive";
 
 export default function App({
   Component,
@@ -39,7 +41,24 @@ export default function App({
           }}
         >
           <NotificationsProvider>
+            <HeaderResponsive />
             <Component {...pageProps} />
+            <Footer
+              links={[
+                {
+                  link: "/#contact",
+                  label: "Contact",
+                },
+                {
+                  link: "/blog",
+                  label: "Blog",
+                },
+                {
+                  link: "/admin",
+                  label: "Admin",
+                },
+              ]}
+            />
           </NotificationsProvider>
         </MantineProvider>
       </SessionContextProvider>

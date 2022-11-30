@@ -24,6 +24,7 @@ import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Router from "next/router";
+import { Footer } from "../components/Footer";
 
 type Reviews = Database["public"]["Tables"]["reviews"]["Row"];
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
@@ -42,7 +43,6 @@ export default function Home({ updateData, reviewData, galleryData }: Props) {
 
   return (
     <>
-      <HeaderResponsive />
       {mobileMatch && (
         <Image
           src={MainImg}
