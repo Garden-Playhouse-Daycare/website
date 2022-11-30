@@ -20,8 +20,8 @@ export default function Admin() {
   return (
     <Container
       size={420}
-      mt={30}
-      mb={!mobileMatch ? 120 : 100}
+      mt={90}
+      mb={!mobileMatch ? 200 : 180}
     >
       <Title
         align="center"
@@ -33,19 +33,10 @@ export default function Admin() {
         Admin Login
       </Title>
       <Text color="dimmed" size="sm" align="center" mt={5}>
-        If you&apos;re an admin of this </Text>
+        If you&apos;re an admin of this site, login by a magic link.</Text>
 
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+      <Paper withBorder shadow="md" p={30} mt={20} radius="md">
         <TextInput label="Email" placeholder="you@example.com" required />
-        <PasswordInput
-          label="Password"
-          placeholder="Your password"
-          required
-          mt="md"
-        />
-        <Group position="apart" mt="lg">
-          <Checkbox label="Remember me" sx={{ lineHeight: 1 }} />
-        </Group>
         <Button fullWidth mt="xl">
           Sign in
         </Button>
