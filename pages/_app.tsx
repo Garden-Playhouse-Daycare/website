@@ -41,24 +41,33 @@ export default function App({
           }}
         >
           <NotificationsProvider>
-            <HeaderResponsive />
-            <Component {...pageProps} />
-            <Footer
-              links={[
-                {
-                  link: "/#contact",
-                  label: "Contact",
-                },
-                {
-                  link: "/blog",
-                  label: "Blog",
-                },
-                {
-                  link: "/admin",
-                  label: "Admin",
-                },
-              ]}
-            />
+            <div
+              style={{
+                display: "flex",
+                minHeight: "100vh",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+              }}
+            >
+              <HeaderResponsive />
+              <Component {...pageProps} />
+              <Footer
+                links={[
+                  {
+                    link: "/#contact",
+                    label: "Contact",
+                  },
+                  {
+                    link: "/blog",
+                    label: "Blog",
+                  },
+                  {
+                    link: "/admin",
+                    label: "Admin",
+                  },
+                ]}
+              />
+            </div>
           </NotificationsProvider>
         </MantineProvider>
       </SessionContextProvider>

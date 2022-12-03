@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   footer: {
-    marginTop: 80,
+    marginTop: "auto",
     borderTop: `1px solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]
     }`,
@@ -37,12 +37,7 @@ interface FooterSimpleProps {
 export function Footer({ links, top }: FooterSimpleProps) {
   const { classes } = useStyles();
   const items = links.map((link) => (
-    <Link
-      href={link.link}
-      key={link.label}
-      legacyBehavior
-      scroll={false}
-    >
+    <Link href={link.link} key={link.label} legacyBehavior scroll={false}>
       <Anchor color="dimmed" size="sm">
         {link.label}
       </Anchor>

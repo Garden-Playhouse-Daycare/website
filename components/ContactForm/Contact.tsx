@@ -122,7 +122,7 @@ export function Contact() {
   const [message, setMessage] = useState("");
 
   return (
-    <Paper radius="lg">
+    <Paper radius="lg" mb="xl">
       <div className={classes.wrapper}>
         <div className={classes.contacts}>
           <Text
