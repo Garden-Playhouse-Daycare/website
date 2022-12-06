@@ -27,6 +27,6 @@ export default async function handler(
     res.status(200).json({ success: 1 });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ process: process.env.SENDGRID_API_KEY!, success: 0, error: err, });
+    res.status(500).json({ success: 0 });
   }
 }
