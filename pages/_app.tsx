@@ -8,6 +8,7 @@ import { useState } from "react";
 import { NotificationsProvider } from "@mantine/notifications";
 import { Footer } from "../components/Footer";
 import { HeaderResponsive } from "../components/HeaderResponsive";
+import { useRouter } from "next/router";
 
 export default function App({
   Component,
@@ -16,6 +17,7 @@ export default function App({
   initialSession: Session;
 }>) {
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+  const router = useRouter();
 
   return (
     <>
@@ -49,9 +51,8 @@ export default function App({
                 justifyContent: "flex-start",
               }}
             >
-              <HeaderResponsive />
               <Component {...pageProps} />
-              <Footer
+              {router.pathname != "/admin" && <Footer
                 links={[
                   {
                     link: "/#contact",
@@ -66,7 +67,7 @@ export default function App({
                     label: "Admin",
                   },
                 ]}
-              />
+              />}
             </div>
           </NotificationsProvider>
         </MantineProvider>

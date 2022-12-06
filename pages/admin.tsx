@@ -10,38 +10,66 @@ import {
   Group,
   Button,
   useMantineTheme,
+  Loader,
+  Center,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import img from "../public/Admin.webp";
+import { Session } from "@supabase/supabase-js";
+import Login from "../components/Admin/Login";
+import Dashboard from "../components/Admin/Dashboard";
+import { HeaderResponsive } from "../components/HeaderResponsive";
+import { useRouter } from "next/router";
+import { Database } from "../lib/database.types";
+
+interface Props {
+  session: Session | null;
+}
 
 export default function Admin() {
-  const theme = useMantineTheme();
-  const mobileMatch = useMediaQuery("(max-width: 565px)");
-  console.log(mobileMatch);
+  const router = useRouter();
+  const supabase = useSupabaseClient<Database>();
+  const [session, setSession] = useState<any>(undefined);
 
-  return (
-    <Container size={420} style={{ position: "relative", top: "50%", transform: "translateY(20%)"}}>
-      <Title
-        align="center"
-        sx={(theme) => ({
-          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-          fontWeight: 900,
-        })}
-        mt="5%"
-      >
-        Admin Login
-      </Title>
-      <Text color="dimmed" size="sm" align="center" mt={5}>
-        If you&apos;re an admin of this site, login by a magic link.
-      </Text>
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
 
-      <Paper withBorder shadow="md" p={30} mt={20} radius="md">
-        <TextInput label="Email" placeholder="you@example.com" required />
-        <Button fullWidth mt="xl">
-          Sign in
-        </Button>
-      </Paper>
-    </Container>
-  );
+      setSession(data);
+    };
+
+    fetchSession();
+  });
+
+  if (session == undefined) {
+    return (
+      <div style={{ height: "100vh" }}>
+        <div
+          style={{
+            position: "relative",
+            top: "50%",
+            transform: "translateY(-50%)",
+          }}
+        >
+          <Center>
+            <Loader variant="dots" size="xl" />
+          </Center>
+        </div>
+      </div>
+    );
+  } else if (session.session == null) {
+    return (
+      <>
+        <HeaderResponsive />
+        <Login />
+      </>
+    );
+  } else {
+    return <Dashboard />;
+  }
 }

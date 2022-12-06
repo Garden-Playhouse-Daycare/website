@@ -181,19 +181,19 @@ export function HeaderResponsive() {
             <Link href="/" className={classes.link} replace>
               Home
             </Link>
-            <Link href="#updates" className={classes.link} scroll={false} replace>
+            <Link href="/#updates" className={classes.link} scroll={false} replace>
               Updates
             </Link>
-            <Link href="#testimonials" className={classes.link} scroll={false} replace>
+            <Link href="/#testimonials" className={classes.link} scroll={false} replace>
               Testimonials
             </Link>
-            <Link href="#about" className={classes.link} scroll={false} replace>
+            <Link href="/#about" className={classes.link} scroll={false} replace>
               About us
             </Link>
-            <Link href="#gallery" className={classes.link} scroll={false} replace>
+            <Link href="/#gallery" className={classes.link} scroll={false} replace>
               Gallery
             </Link>
-            <Link href="#contact" className={classes.link} scroll={false} replace>
+            <Link href="/#contact" className={classes.link} scroll={false} replace>
               Contact
             </Link>
           </Group>

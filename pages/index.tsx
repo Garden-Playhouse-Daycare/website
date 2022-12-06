@@ -43,6 +43,7 @@ export default function Home({ updateData, reviewData, galleryData }: Props) {
 
   return (
     <>
+      <HeaderResponsive />
       {mobileMatch && (
         <Image
           src={MainImg}

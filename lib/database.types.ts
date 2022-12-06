@@ -86,6 +86,20 @@ export interface Database {
           alt?: string | null
         }
       }
+      users: {
+        Row: {
+          id: number
+          email: string | null
+        }
+        Insert: {
+          id?: number
+          email?: string | null
+        }
+        Update: {
+          id?: number
+          email?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never

@@ -37,7 +37,7 @@ interface FooterSimpleProps {
 export function Footer({ links, top }: FooterSimpleProps) {
   const { classes } = useStyles();
   const items = links.map((link) => (
-    <Link href={link.link} key={link.label} legacyBehavior scroll={false}>
+    <Link href={link.link} key={link.label} legacyBehavior scroll={link.link != "/#contact" ? true : false}>
       <Anchor color="dimmed" size="sm">
         {link.label}
       </Anchor>
