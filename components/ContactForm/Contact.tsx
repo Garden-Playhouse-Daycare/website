@@ -158,8 +158,6 @@ export function Contact() {
               body: JSON.stringify(data),
             });
 
-            console.log("made it");
-
             if (response.status === 200) {
               showNotification({
                 title: "Message sent",
@@ -169,6 +167,7 @@ export function Contact() {
                 autoClose: 2000,
               });
             } else {
+              console.log(response);
               showNotification({
                 title: "Failure",
                 message:
