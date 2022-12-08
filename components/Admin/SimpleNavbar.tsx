@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { createStyles, Navbar, Group, Code } from "@mantine/core";
 import {
-  IconBellRinging,
-  IconFingerprint,
+  IconEdit,
+  IconStars,
   IconKey,
   IconSettings,
   Icon2fa,
   IconDatabaseImport,
-  IconReceipt2,
-  IconSwitchHorizontal,
+  IconPhotoEdit,
+  IconHome,
   IconLogout,
 } from "@tabler/icons";
 import { MantineLogo } from "@mantine/ds";
@@ -21,7 +21,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
         variant: "filled",
         color: theme.primaryColor,
       }).background,
-      height: "100vh",
+      height: "calc(100% - 50px)",
     },
 
     version: {
@@ -37,11 +37,6 @@ const useStyles = createStyles((theme, _params, getRef) => {
     header: {
       paddingBottom: theme.spacing.md,
       marginBottom: theme.spacing.md * 1.5,
-      borderBottom: `1px solid ${theme.fn.lighten(
-        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
-          .background!,
-        0.1
-      )}`,
     },
 
     footer: {
@@ -97,31 +92,17 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 const data = [
-  { link: "", label: "Notifications", icon: IconBellRinging },
-  { link: "", label: "Billing", icon: IconReceipt2 },
-  { link: "", label: "Security", icon: IconFingerprint },
-  { link: "", label: "SSH Keys", icon: IconKey },
-  { link: "", label: "Databases", icon: IconDatabaseImport },
-  { link: "", label: "Authentication", icon: Icon2fa },
-  { link: "", label: "Other Settings", icon: IconSettings },
+  { link: "", label: "Manage updates", icon: IconEdit },
+  { link: "", label: "Manage gallery", icon: IconPhotoEdit },
+  { link: "", label: "Manage testimonials", icon: IconStars },
 ];
 
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+interface Props {
+  opened: boolean;
+  setOpened: Dispatch<SetStateAction<boolean>>;
+}
 
-export function SimpleNavbar() {
+export function SimpleNavbar(props: Props) {
   const { classes, cx } = useStyles();
   const [active, setActive] = useState("Billing");
   const currentDate = new Date();
@@ -144,12 +125,15 @@ export function SimpleNavbar() {
   ));
 
   return (
-    <Navbar height={700} width={{ sm: 300 }} p="md" className={classes.navbar}>
+    <Navbar
+      height={700}
+      width={{ sm: 300 }}
+      hiddenBreakpoint="sm"
+      hidden={!props.opened}
+      p="md"
+      className={classes.navbar}
+    >
       <Navbar.Section grow>
-        <Group className={classes.header} position="apart">
-          <MantineLogo size={28} inverted />
-          <Code className={classes.version}>{`${months[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`}</Code>
-        </Group>
         {links}
       </Navbar.Section>
 
@@ -159,8 +143,8 @@ export function SimpleNavbar() {
           className={classes.link}
           onClick={(event) => event.preventDefault()}
         >
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
+          <IconHome className={classes.linkIcon} stroke={1.5} />
+          <span>Go back home</span>
         </a>
 
         <a
