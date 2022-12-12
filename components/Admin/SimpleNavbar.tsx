@@ -100,23 +100,26 @@ const data = [
 interface Props {
   opened: boolean;
   setOpened: Dispatch<SetStateAction<boolean>>;
+  active: string;
+  setActive: Dispatch<SetStateAction<string>>;
 }
 
 export function SimpleNavbar(props: Props) {
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState("Billing");
+  
   const currentDate = new Date();
 
   const links = data.map((item) => (
     <a
       className={cx(classes.link, {
-        [classes.linkActive]: item.label === active,
+        [classes.linkActive]: item.label === props.active,
       })}
       href={item.link}
       key={item.label}
       onClick={(event) => {
         event.preventDefault();
-        setActive(item.label);
+        props.setActive(item.label);
+        props.setOpened(false);
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />

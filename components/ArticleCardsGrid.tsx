@@ -180,9 +180,7 @@ export function ArticlesCardsGrid(props: Props) {
     );
   } else {
     return (
-      <Container py="xl">
-        <Text>No data</Text>
-      </Container>
+      <Loader variant="dots" />
     );
   }
 }

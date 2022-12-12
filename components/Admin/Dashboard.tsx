@@ -15,6 +15,9 @@ import { SimpleNavbar } from "./SimpleNavbar";
 import { useState } from "react";
 import { MantineLogo } from "@mantine/ds";
 import { useMediaQuery } from "@mantine/hooks";
+import { ArticlesCardsGrid } from "../ArticleCardsGrid";
+import { DataProps } from "../../lib/DataProps";
+import { ManageUpdates } from "./ManageUpdates";
 
 const months = [
   "January",
@@ -50,9 +53,10 @@ const useStyles = createStyles((theme) => ({
     },
   },
 }));
-
-const Dashboard = () => {
+const Dashboard = (props: DataProps) => {
   const [opened, setOpened] = useState(false);
+  const links = ["Manage updates", "Manage gallery", "Manage testimonials"]
+  const [active, setActive] = useState(links[0]);
   const currentDate = new Date();
   const { classes } = useStyles();
   const theme = useMantineTheme();
@@ -61,7 +65,7 @@ const Dashboard = () => {
   return (
     <AppShell
       padding="md"
-      navbar={<SimpleNavbar opened={opened} setOpened={setOpened} />}
+      navbar={<SimpleNavbar opened={opened} setOpened={setOpened} active={active} setActive={setActive} />}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
       header={
@@ -87,7 +91,7 @@ const Dashboard = () => {
         </Header>
       }
     >
-      <div>hi</div>
+      {active == links[0] && <ManageUpdates updateData={props.updateData} />}
     </AppShell>
   );
 };

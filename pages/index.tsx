@@ -25,18 +25,9 @@ import { useEffect, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Router from "next/router";
 import { Footer } from "../components/Footer";
+import { DataProps } from "../lib/DataProps";
 
-type Reviews = Database["public"]["Tables"]["reviews"]["Row"];
-type Updates = Database["public"]["Tables"]["updates"]["Row"];
-type Gallery = Database["public"]["Tables"]["gallery"]["Row"];
-
-interface Props {
-  updateData: Updates[] | [];
-  reviewData: Reviews[] | [];
-  galleryData: Gallery[] | [];
-}
-
-export default function Home({ updateData, reviewData, galleryData }: Props) {
+export default function Home({ updateData, reviewData, galleryData }: DataProps) {
   const theme = useMantineTheme();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const supabase = useSupabaseClient();

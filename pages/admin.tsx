@@ -26,12 +26,18 @@ import Dashboard from "../components/Admin/Dashboard";
 import { HeaderResponsive } from "../components/HeaderResponsive";
 import { useRouter } from "next/router";
 import { Database } from "../lib/database.types";
+import { GetServerSidePropsContext } from "next";
+import { DataProps } from "../lib/DataProps";
 
 interface Props {
   session: Session | null;
 }
 
-export default function Admin() {
+export default function Admin({
+  updateData,
+  reviewData,
+  galleryData,
+}: DataProps) {
   const router = useRouter();
   const supabase = useSupabaseClient<Database>();
   const [session, setSession] = useState<any>(undefined);
@@ -44,7 +50,7 @@ export default function Admin() {
     };
 
     fetchSession();
-  });
+  }, [supabase.auth]);
 
   if (session == undefined) {
     return (
@@ -70,6 +76,28 @@ export default function Admin() {
       </>
     );
   } else {
-    return <Dashboard />;
+    return <Dashboard updateData={updateData} reviewData={reviewData} galleryData={galleryData} />;
   }
 }
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const supabase = createServerSupabaseClient<Database>(ctx);
+
+  const { data: updateData } = await supabase
+    .from("updates")
+    .select()
+    .order("date", { ascending: false })
+    .limit(4);
+
+  const { data: reviewData } = await supabase.from("reviews").select();
+
+  const { data: galleryData } = await supabase.from("gallery").select();
+
+  return {
+    props: {
+      updateData: updateData ?? [],
+      reviewData: reviewData ?? [],
+      galleryData: galleryData ?? [],
+    },
+  };
+};
