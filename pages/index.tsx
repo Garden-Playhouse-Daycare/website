@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { HeaderResponsive } from "../components/HeaderResponsive";
-import { ArticlesCardsGrid } from "../components/ArticleCardsGrid";
 import { ReviewsGrid } from "../components/Testimonials/ReviewsGrid";
 import { AboutPage } from "../components/About/AboutPage";
 import { Gallery } from "../components/Gallery";
@@ -26,8 +25,23 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Router from "next/router";
 import { Footer } from "../components/Footer";
 import { DataProps } from "../lib/DataProps";
+import dynamic from "next/dynamic";
 
-export default function Home({ updateData, reviewData, galleryData }: DataProps) {
+export const Updates = dynamic(
+  () =>
+    import("../components/ArticleCardsGrid").then(
+      (mod) => mod.ArticlesCardsGrid
+    ) as any,
+  {
+    ssr: true,
+  }
+) as any;
+
+export default function Home({
+  updateData,
+  reviewData,
+  galleryData,
+}: DataProps) {
   const theme = useMantineTheme();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const supabase = useSupabaseClient();
@@ -82,7 +96,7 @@ export default function Home({ updateData, reviewData, galleryData }: DataProps)
           style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
         />
       </Title>
-      <ArticlesCardsGrid updateData={updateData} />
+      <Updates updateData={updateData} />
       <Title
         mt={!mobileMatch ? 50 : 25}
         mb="md"

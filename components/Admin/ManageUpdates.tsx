@@ -14,6 +14,7 @@ import {
   ActionIcon,
   Drawer,
   useMantineTheme,
+  Modal,
 } from "@mantine/core";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ import { FileObject } from "../../lib/FileObject";
 import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
 import { IconEdit } from "@tabler/icons";
 import { DropzoneButton } from "./Dropzone";
+import { useMediaQuery } from "@mantine/hooks";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
@@ -78,7 +80,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
       height: 6,
       width: 6,
       position: "relative",
-      bottom: "10px",
+      bottom: "20px",
 
       "&[data-active]": {
         width: 20,
@@ -117,12 +119,14 @@ interface Props {
 export function ManageUpdates(props: Props) {
   const { classes } = useStyles();
   const supabase = useSupabaseClient<Database>();
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState<any>(false);
   const theme = useMantineTheme();
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [alt, setAlt] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
+  const [modalOpened, setModalOpened] = useState<any>(false);
 
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article, index) => (
@@ -134,7 +138,7 @@ export function ManageUpdates(props: Props) {
               leftIcon={<IconEdit size={17} />}
               variant="subtle"
               onClick={(e) => {
-                setOpened(true);
+                setOpened(article);
                 setTitle(article.desc!);
                 setDate(article.date!);
                 setImages(article.image!);
@@ -144,42 +148,40 @@ export function ManageUpdates(props: Props) {
               Edit
             </Button>
           </Group>
-          <AspectRatio ratio={1920 / 1080}>
-            <Card.Section>
-              <Carousel
-                withIndicators
-                classNames={{
-                  root: classes.carousel,
-                  controls: classes.carouselControls,
-                  indicator: classes.carouselIndicator,
-                }}
-                styles={{
-                  control: {
-                    "&[data-inactive]": {
-                      opacity: 0,
-                      cursor: "default",
-                    },
+          <Card.Section>
+            <Carousel
+              withIndicators
+              classNames={{
+                root: classes.carousel,
+                controls: classes.carouselControls,
+                indicator: classes.carouselIndicator,
+              }}
+              styles={{
+                control: {
+                  "&[data-inactive]": {
+                    opacity: 0,
+                    cursor: "default",
                   },
-                }}
-              >
-                {article.image?.map((rowImage) => (
-                  <Carousel.Slide key={Math.random()}>
-                    <Center>
-                      <MantineImage
-                        src={rowImage}
-                        height={220}
-                        alt={
-                          article.alt ??
-                          "An image depicting crafts and an holiday"
-                        }
-                        radius="md"
-                      />
-                    </Center>
-                  </Carousel.Slide>
-                ))}
-              </Carousel>
-            </Card.Section>
-          </AspectRatio>
+                },
+              }}
+            >
+              {article.image?.map((rowImage) => (
+                <Carousel.Slide key={Math.random()}>
+                  <Center>
+                    <MantineImage
+                      src={rowImage}
+                      height={220}
+                      alt={
+                        article.alt ??
+                        "An image depicting crafts and an holiday"
+                      }
+                      radius="md"
+                    />
+                  </Center>
+                </Carousel.Slide>
+              ))}
+            </Carousel>
+          </Card.Section>
           <Text
             color="dimmed"
             size="xs"
@@ -207,38 +209,64 @@ export function ManageUpdates(props: Props) {
             size="xl"
             position="right"
           >
-            <AspectRatio ratio={1920 / 1080}>
-              <Carousel
-                withIndicators
-                classNames={{
-                  root: classes.carousel,
-                  controls: classes.carouselControls,
-                  indicator: classes.drawerIndicator,
-                }}
-                styles={{
-                  control: {
-                    "&[data-inactive]": {
-                      opacity: 0,
-                      cursor: "default",
-                    },
+            <Modal
+              opened={modalOpened}
+              onClose={() => setModalOpened(false)}
+              title="Introduce yourself!"
+            >
+              <MantineImage
+                src={modalOpened}
+                height={220}
+                alt={alt ?? "An image depicting crafts and an holiday"}
+                radius="md"
+                mb="md"
+              />
+              <DropzoneButton id={opened.id} setModalOpened={setModalOpened} originalImage={modalOpened} />
+            </Modal>
+            <Carousel
+              withIndicators
+              classNames={{
+                root: classes.carousel,
+                controls: classes.carouselControls,
+                indicator: classes.drawerIndicator,
+              }}
+              styles={{
+                control: {
+                  "&[data-inactive]": {
+                    opacity: 0,
+                    cursor: "default",
                   },
-                }}
-              >
-                {images.map((rowImage) => (
-                  <Carousel.Slide key={Math.random()}>
-                    <Center>
-                      <MantineImage
-                        src={rowImage}
-                        height={220}
-                        alt={alt ?? "An image depicting crafts and an holiday"}
-                        radius="md"
-                      />
-                    </Center>
-                  </Carousel.Slide>
-                ))}
-              </Carousel>
-            </AspectRatio>
-            <DropzoneButton />
+                },
+              }}
+              mb="md"
+            >
+              {images.map((rowImage) => (
+                <Carousel.Slide key={Math.random()}>
+                  <ActionIcon
+                    color="teal"
+                    style={{
+                      position: "absolute",
+                      left: "90%",
+                      top: "2%",
+                      zIndex: 5,
+                    }}
+                    onClick={() => setModalOpened(rowImage)}
+                    variant="filled"
+                    size="lg"
+                  >
+                    <IconEdit size={23} />
+                  </ActionIcon>
+                  <Center>
+                    <MantineImage
+                      src={rowImage}
+                      height={220}
+                      alt={alt ?? "An image depicting crafts and an holiday"}
+                      radius="md"
+                    />
+                  </Center>
+                </Carousel.Slide>
+              ))}
+            </Carousel>
           </Drawer>
           {cards}
         </SimpleGrid>

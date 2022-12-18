@@ -14,7 +14,7 @@ import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { Database } from "../lib/database.types";
 import { FileObject } from "../lib/FileObject";
-import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
+import { Carousel } from "@mantine/carousel";
 import Image from "next/image";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];

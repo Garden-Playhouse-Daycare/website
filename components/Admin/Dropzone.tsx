@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, useRef, useState } from "react";
 import {
   Text,
   Group,
@@ -6,6 +6,7 @@ import {
   createStyles,
   Image,
   SimpleGrid,
+  Center,
 } from "@mantine/core";
 import { Dropzone, MIME_TYPES, FileWithPath } from "@mantine/dropzone";
 import {
@@ -14,8 +15,11 @@ import {
   IconDownload,
   IconTrashX,
 } from "@tabler/icons";
-import { useHover } from "@mantine/hooks";
+import { useHover, useMediaQuery } from "@mantine/hooks";
 import trashImg from "./trash-x.svg";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "../../lib/database.types";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -25,7 +29,7 @@ const useStyles = createStyles((theme) => ({
 
   dropzone: {
     borderWidth: 1,
-    paddingBottom: 50,
+    paddingBottom: 40,
   },
 
   icon: {
@@ -43,31 +47,34 @@ const useStyles = createStyles((theme) => ({
   },
 
   image: {
-    "&:hover": {
-    },
+    "&:hover": {},
   },
 }));
 
-export function DropzoneButton() {
+interface Props {
+  id: number;
+  setModalOpened: Dispatch<any>;
+  originalImage: string;
+}
+
+export function DropzoneButton(props: Props) {
   const { classes, theme } = useStyles();
   const openRef = useRef<() => void>(null);
   const [files, setFiles] = useState<FileWithPath[]>([]);
-  const [hover, setHover] = useState<number[]>([]);
+  const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
+  const supabase = useSupabaseClient<Database>();
+  const router = useRouter();
 
   const previews = files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file);
     return (
       <Image
         key={index}
-        src={!hover.includes(index) ? imageUrl : trashImg.src}
+        src={imageUrl}
         imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }}
         alt="Image"
         radius="md"
-        onMouseEnter={() => setHover([...hover, index])}
-        onMouseLeave={() => {
-          const newHover = hover.filter((id) => id !== index);
-          setHover(newHover);
-        }}
+        width={mobileMatch ? "55%" : "50%"}
         className={classes.image}
         withPlaceholder
       />
@@ -113,32 +120,87 @@ export function DropzoneButton() {
             <Text align="center" weight={700} size="lg" mt="xl">
               <Dropzone.Accept>Drop images here</Dropzone.Accept>
               <Dropzone.Reject>Invalid File Type</Dropzone.Reject>
-              <Dropzone.Idle>Upload resume</Dropzone.Idle>
+              <Dropzone.Idle>Upload images</Dropzone.Idle>
             </Text>
-            <Text align="center" size="sm" mt="xs" color="dimmed">
-              Drag&apos;n&apos;drop images here to replace the current update
-              images. We can accept only <i>.jpg</i> or <i>.png</i> files that
-              are less than 10mb in size.
-            </Text>
+            {previews.length === 0 ? (
+              <Text align="center" size="sm" mt="xs" color="dimmed">
+                Drag&apos;n&apos;drop images here to replace the current update
+                image. We can accept only <i>.jpg</i> or <i>.png</i> files that
+                are less than 10mb in size.
+              </Text>
+            ) : (
+              previews[0]
+            )}
           </div>
         </Dropzone>
+
         <Button
           className={classes.control}
           size="md"
           radius="xl"
-          mb="xl"
           onClick={() => openRef.current?.()}
+          disabled={previews.length > 0}
         >
           Select files
         </Button>
       </div>
-      <SimpleGrid
-        cols={4}
-        breakpoints={[{ maxWidth: "sm", cols: 1 }]}
-        mt={previews.length > 0 ? "xl" : 0}
-      >
-        {previews}
-      </SimpleGrid>
+      <Group position="apart">
+        <Button
+          mt="lg"
+          size="sm"
+          variant="outline"
+          color="red"
+          onClick={() => {
+            setFiles([]);
+            props.setModalOpened(false);
+          }}
+        >
+          Revert
+        </Button>
+        <Button
+          mt="lg"
+          size="sm"
+          disabled={previews.length === 0}
+          onClick={async () => {
+            const { data: article } = await supabase
+              .from("updates")
+              .select()
+              .eq("id", props.id)
+              .single();
+
+            const { data: newImg } = await supabase.storage
+              .from("updates")
+              .update(
+                `${article?.date?.split("-")[0]}${
+                  article?.tag
+                }/${decodeURIComponent(
+                  props.originalImage.split("/")[
+                    props.originalImage.split("/").length - 1
+                  ]
+                )}`,
+                files[0],
+              );
+
+            const articleImages = article?.image;
+            articleImages?.forEach((image) => {
+              if (image == props.originalImage) {
+                image = newImg?.path!;
+              }
+            });
+
+            const { data: imgUrl } = await supabase
+              .from("updates")
+              .update({ image: articleImages })
+              .eq("id", props.id);
+
+            //router.replace(router.asPath);
+
+            //props.setModalOpened(false);
+          }}
+        >
+          Save Changes
+        </Button>
+      </Group>
     </>
   );
 }
