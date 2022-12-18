@@ -10,12 +10,8 @@ import {
   Paper,
   Image as MantineImage,
 } from "@mantine/core";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
 import { Database } from "../lib/database.types";
-import { FileObject } from "../lib/FileObject";
 import { Carousel } from "@mantine/carousel";
-import Image from "next/image";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
@@ -86,38 +82,6 @@ interface Props {
 
 export function ArticlesCardsGrid(props: Props) {
   const { classes } = useStyles();
-  const supabase = useSupabaseClient<Database>();
-  const [loading, setLoading] = useState(false);
-
-  // TODO use this code in admin center
-  // const addDataToDB = async () => {
-  //   if (props.updateData) {
-  //     for (const article of props.updateData) {
-  //       const year = article.date?.split("-")[0];
-  //       const { data } = await supabase.storage
-  //         .from("updates")
-  //         .list(`${year}${article.tag}`);
-
-  //       const imageList: string[] = [];
-
-  //       for (const image of data!) {
-  //         const { data } = supabase.storage
-  //           .from("updates")
-  //           .getPublicUrl(`${year}${article.tag}/${image.name}`);
-
-  //         const publicUrl = data.publicUrl;
-
-  //         imageList.indexOf(publicUrl) === -1 && imageList.push(publicUrl);
-  //       }
-
-  //       const { data: insertData, error } = await supabase
-  //         .from("updates")
-  //         .update({ image: imageList, alt: "Sample Alt" })
-  //         .eq("id", article.id);
-  //       if (error) console.log(error);
-  //     }
-  //   }
-  // };
 
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article) => (
