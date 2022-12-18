@@ -217,17 +217,6 @@ export function ArticlesCardsGrid(props: Props) {
     //   </Card>
     // );
 
-    const newImages = props.updateData.map((img) => (
-      <Carousel.Slide key={img.id}>
-        <MantineImage
-          src={img.image}
-          height={220}
-          alt={"An image depicting crafts and an holiday"}
-          radius="md"
-        />
-      </Carousel.Slide>
-    ));
-
     const cards = props.updateData.map((article) => (
       <Card key={article.id} p="md" radius="md" className={classes.card}>
         <Card.Section>
@@ -248,7 +237,16 @@ export function ArticlesCardsGrid(props: Props) {
               },
             }}
           >
-            {newImages}
+            {props.updateData.map((img) => (
+              <Carousel.Slide key={img.id}>
+                <MantineImage
+                  src={img.image}
+                  height={220}
+                  alt={"An image depicting crafts and an holiday"}
+                  radius="md"
+                />
+              </Carousel.Slide>
+            ))}
           </Carousel>
         </Card.Section>
       </Card>
@@ -256,9 +254,9 @@ export function ArticlesCardsGrid(props: Props) {
 
     return (
       <Container py="xl">
-        <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
-          {cards}
-        </SimpleGrid>
+          {cards[0]}
+        {/* <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
+        </SimpleGrid> */}
       </Container>
     );
   } else {
