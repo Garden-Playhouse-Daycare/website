@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { HeaderResponsive } from "../components/HeaderResponsive";
-import { ReviewsGrid } from "../components/Testimonials/ReviewsGrid";
+
 import { AboutPage } from "../components/About/AboutPage";
 import { Gallery } from "../components/Gallery";
 import { Contact } from "../components/ContactForm/Contact";
@@ -27,6 +27,13 @@ import { Footer } from "../components/Footer";
 import { DataProps } from "../lib/DataProps";
 import dynamic from "next/dynamic";
 import { ArticlesCardsGrid } from "../components/ArticleCardsGrid";
+const ReviewsGrid = dynamic(
+  () =>
+    import("../components/Testimonials/ReviewsGrid").then(
+      (mod) => mod.ReviewsGrid
+    ) as any,
+  { ssr: false }
+) as any;
 
 export default function Home({
   updateData,
@@ -36,6 +43,9 @@ export default function Home({
   const theme = useMantineTheme();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const supabase = useSupabaseClient();
+  if (!updateData) {
+    console.log("Loading...");
+  }
 
   return (
     <>
@@ -87,7 +97,7 @@ export default function Home({
           style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
         />
       </Title>
-      <ArticlesCardsGrid updateData={galleryData} />
+      <ArticlesCardsGrid updateData={updateData} />
       <Title
         mt={!mobileMatch ? 50 : 25}
         mb="md"
