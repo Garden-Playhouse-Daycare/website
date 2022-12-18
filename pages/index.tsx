@@ -167,13 +167,6 @@ export default function Home({
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient<Database>(ctx);
-  const { req, res } = ctx;
-
-  res.setHeader(
-    "Cache-Control",
-    "no-cache, no-store, max-age=0, must-revalidate"
-  );
-
   const { data: updateData } = await supabase
     .from("updates")
     .select()
