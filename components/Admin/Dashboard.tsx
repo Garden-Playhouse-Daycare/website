@@ -15,7 +15,6 @@ import { SimpleNavbar } from "./SimpleNavbar";
 import { useState } from "react";
 import { MantineLogo } from "@mantine/ds";
 import { useMediaQuery } from "@mantine/hooks";
-import { ArticlesCardsGrid } from "../ArticleCardsGrid";
 import { DataProps } from "../../lib/DataProps";
 import { ManageUpdates } from "./ManageUpdates";
 

@@ -20,22 +20,13 @@ import { Contact } from "../components/ContactForm/Contact";
 import { Database } from "../lib/database.types";
 import { GetServerSidePropsContext } from "next";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Router from "next/router";
 import { Footer } from "../components/Footer";
 import { DataProps } from "../lib/DataProps";
 import dynamic from "next/dynamic";
-
-export const Updates = dynamic(
-  () =>
-    import("../components/ArticleCardsGrid").then(
-      (mod) => mod.ArticlesCardsGrid
-    ) as any,
-  {
-    ssr: true,
-  }
-) as any;
+import { ArticlesCardsGrid } from "../components/ArticleCardsGrid";
 
 export default function Home({
   updateData,
@@ -96,7 +87,7 @@ export default function Home({
           style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
         />
       </Title>
-      <Updates updateData={updateData} />
+      <ArticlesCardsGrid updateData={galleryData} />
       <Title
         mt={!mobileMatch ? 50 : 25}
         mb="md"
