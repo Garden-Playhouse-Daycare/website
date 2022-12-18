@@ -217,11 +217,11 @@ export function ArticlesCardsGrid(props: Props) {
     //   </Card>
     // );
 
-    const newImages = images.map((img) => (
-      <Carousel.Slide key={img}>
+    const newImages = props.updateData.map((img) => (
+      <Carousel.Slide key={img.id}>
         <Center>
           <MantineImage
-            src={img}
+            src={img.image}
             height={220}
             alt={"An image depicting crafts and an holiday"}
             radius="md"
