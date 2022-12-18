@@ -43,9 +43,6 @@ export default function Home({
   const theme = useMantineTheme();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const supabase = useSupabaseClient();
-  if (!updateData) {
-    console.log("Loading...");
-  }
 
   return (
     <>
