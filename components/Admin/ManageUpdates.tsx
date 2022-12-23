@@ -131,57 +131,32 @@ export function ManageUpdates(props: Props) {
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article, index) => (
       <>
-        <Card key={article.id} p="md" radius="md" className={classes.card}>
-          <Group position="apart">
-            <span></span>
-            <Button
-              leftIcon={<IconEdit size={17} />}
-              variant="subtle"
-              onClick={() => {
-                setOpened(article);
-                setTitle(article.desc!);
-                setDate(article.date!);
-                setImages(article.image!);
-                setAlt(article.alt!);
-              }}
-            >
-              Edit
-            </Button>
-          </Group>
-          <Card.Section>
-            <Carousel
-              withIndicators
-              classNames={{
-                root: classes.carousel,
-                controls: classes.carouselControls,
-                indicator: classes.carouselIndicator,
-              }}
-              styles={{
-                control: {
-                  "&[data-inactive]": {
-                    opacity: 0,
-                    cursor: "default",
-                  },
+        <Card
+          key={article.id}
+          p="md"
+          radius="md"
+          className={classes.card}
+          withBorder
+        >
+          <Carousel
+            withIndicators
+            styles={{
+              control: {
+                "&[data-inactive]": {
+                  opacity: "20%",
+                  cursor: "default",
                 },
-              }}
-            >
-              {article.image?.map((rowImage) => (
-                <Carousel.Slide key={Math.random()}>
-                  <Center>
-                    <MantineImage
-                      src={rowImage}
-                      height={220}
-                      alt={
-                        article.alt ??
-                        "An image depicting crafts and an holiday"
-                      }
-                      radius="md"
-                    />
-                  </Center>
-                </Carousel.Slide>
-              ))}
-            </Carousel>
-          </Card.Section>
+              },
+            }}
+          >
+            {article.image?.map((img) => (
+              <Carousel.Slide key={Math.random()}>
+                <AspectRatio ratio={1920 / 1080}>
+                  <MantineImage src={img} alt={article.alt!} height={250} />
+                </AspectRatio>
+              </Carousel.Slide>
+            ))}
+          </Carousel>
           <Text
             color="dimmed"
             size="xs"
@@ -221,7 +196,11 @@ export function ManageUpdates(props: Props) {
                 radius="md"
                 mb="md"
               />
-              <DropzoneButton id={opened.id} setModalOpened={setModalOpened} originalImage={modalOpened} />
+              <DropzoneButton
+                id={opened.id}
+                setModalOpened={setModalOpened}
+                originalImage={modalOpened}
+              />
             </Modal>
             <Carousel
               withIndicators
