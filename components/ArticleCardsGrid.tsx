@@ -8,14 +8,14 @@ import {
   Loader,
   Center,
   Paper,
-  Image as MantineImage,
+  Image,
+  Group,
 } from "@mantine/core";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
 import { Database } from "../lib/database.types";
-import { FileObject } from "../lib/FileObject";
 import { Carousel } from "@mantine/carousel";
-import Image from "next/image";
+import { useMediaQuery } from "@mantine/hooks";
+import Autoplay from "embla-carousel-autoplay";
+import { useRef } from "react";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
@@ -80,84 +80,43 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
+
 interface Props {
   updateData: Updates[] | [];
 }
 
 export function ArticlesCardsGrid(props: Props) {
-  const { classes } = useStyles();
-  const supabase = useSupabaseClient<Database>();
-  const [loading, setLoading] = useState(false);
-
-  // TODO use this code in admin center
-  // const addDataToDB = async () => {
-  //   if (props.updateData) {
-  //     for (const article of props.updateData) {
-  //       const year = article.date?.split("-")[0];
-  //       const { data } = await supabase.storage
-  //         .from("updates")
-  //         .list(`${year}${article.tag}`);
-
-  //       const imageList: string[] = [];
-
-  //       for (const image of data!) {
-  //         const { data } = supabase.storage
-  //           .from("updates")
-  //           .getPublicUrl(`${year}${article.tag}/${image.name}`);
-
-  //         const publicUrl = data.publicUrl;
-
-  //         imageList.indexOf(publicUrl) === -1 && imageList.push(publicUrl);
-  //       }
-
-  //       const { data: insertData, error } = await supabase
-  //         .from("updates")
-  //         .update({ image: imageList, alt: "Sample Alt" })
-  //         .eq("id", article.id);
-  //       if (error) console.log(error);
-  //     }
-  //   }
-  // };
-
+  const { classes, theme } = useStyles();
+  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
+  
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article) => (
-      <Card key={article.id} p="md" radius="md" className={classes.card}>
-        <AspectRatio ratio={1920 / 1080}>
-          <Card.Section>
-            <Carousel
-              withIndicators
-              classNames={{
-                root: classes.carousel,
-                controls: classes.carouselControls,
-                indicator: classes.carouselIndicator,
-              }}
-              styles={{
-                control: {
-                  "&[data-inactive]": {
-                    opacity: 0,
-                    cursor: "default",
-                  },
-                },
-              }}
-            >
-              {article.image?.map((rowImage) => (
-                <Carousel.Slide key={Math.random()}>
-                  <Center>
-                    <MantineImage
-                      src={rowImage}
-                      height={220}
-                      alt={
-                        article.alt ??
-                        "An image depicting crafts and an holiday"
-                      }
-                      radius="md"
-                    />
-                  </Center>
-                </Carousel.Slide>
-              ))}
-            </Carousel>
-          </Card.Section>
-        </AspectRatio>
+      <Card
+        key={article.id}
+        p="md"
+        radius="md"
+        className={classes.card}
+        withBorder
+      >
+        <Carousel
+          withIndicators
+          styles={{
+            control: {
+              "&[data-inactive]": {
+                opacity: "20%",
+                cursor: "default",
+              },
+            },
+          }}
+        >
+          {article.image?.map((img) => (
+            <Carousel.Slide key={Math.random()}>
+              <AspectRatio ratio={1920 / 1080}>
+                <Image src={img} alt={article.alt!} height={250} />
+              </AspectRatio>
+            </Carousel.Slide>
+          ))}
+        </Carousel>
         <Text
           color="dimmed"
           size="xs"

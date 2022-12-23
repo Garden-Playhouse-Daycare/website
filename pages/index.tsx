@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { HeaderResponsive } from "../components/HeaderResponsive";
-
 import { AboutPage } from "../components/About/AboutPage";
 import { Gallery } from "../components/Gallery";
 import { Contact } from "../components/ContactForm/Contact";
@@ -168,7 +167,6 @@ export default function Home({
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient<Database>(ctx);
-
   const { data: updateData } = await supabase
     .from("updates")
     .select()

@@ -22,9 +22,11 @@
     "@supabase/auth-helpers-nextjs": "^0.5.2",
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/supabase-js": "^2.1.0",
+    "embla-carousel-autoplay": "^7.0.5",
     "next": "13.0.5-canary.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "sharp": "^0.31.2"
   },
   "devDependencies": {
     "@types/node": "18.11.7",
