@@ -8,10 +8,14 @@ import {
   Loader,
   Center,
   Paper,
-  Image as MantineImage,
+  Image,
+  Group,
 } from "@mantine/core";
 import { Database } from "../lib/database.types";
 import { Carousel } from "@mantine/carousel";
+import { useMediaQuery } from "@mantine/hooks";
+import Autoplay from "embla-carousel-autoplay";
+import { useRef } from "react";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
@@ -76,52 +80,43 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
+
 interface Props {
   updateData: Updates[] | [];
 }
 
 export function ArticlesCardsGrid(props: Props) {
-  const { classes } = useStyles();
-
+  const { classes, theme } = useStyles();
+  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
+  
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article) => (
-      <Card key={article.id} p="md" radius="md" className={classes.card}>
-        <AspectRatio ratio={1920 / 1080}>
-          <Card.Section>
-            <Carousel
-              withIndicators
-              classNames={{
-                root: classes.carousel,
-                controls: classes.carouselControls,
-                indicator: classes.carouselIndicator,
-              }}
-              styles={{
-                control: {
-                  "&[data-inactive]": {
-                    opacity: 0,
-                    cursor: "default",
-                  },
-                },
-              }}
-            >
-              {article.image?.map((rowImage) => (
-                <Carousel.Slide key={Math.random()}>
-                  <Center>
-                    <MantineImage
-                      src={rowImage}
-                      height={220}
-                      alt={
-                        article.alt ??
-                        "An image depicting crafts and an holiday"
-                      }
-                      radius="md"
-                    />
-                  </Center>
-                </Carousel.Slide>
-              ))}
-            </Carousel>
-          </Card.Section>
-        </AspectRatio>
+      <Card
+        key={article.id}
+        p="md"
+        radius="md"
+        className={classes.card}
+        withBorder
+      >
+        <Carousel
+          withIndicators
+          styles={{
+            control: {
+              "&[data-inactive]": {
+                opacity: "20%",
+                cursor: "default",
+              },
+            },
+          }}
+        >
+          {article.image?.map((img) => (
+            <Carousel.Slide key={Math.random()}>
+              <AspectRatio ratio={1920 / 1080}>
+                <Image src={img} alt={article.alt!} height={250} />
+              </AspectRatio>
+            </Carousel.Slide>
+          ))}
+        </Carousel>
         <Text
           color="dimmed"
           size="xs"
