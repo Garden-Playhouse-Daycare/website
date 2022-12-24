@@ -155,7 +155,7 @@ export function DropzoneButton(props: Props) {
             props.setModalOpened(false);
           }}
         >
-          Revert
+          Cancel
         </Button>
         <Button
           mt="lg"
@@ -178,20 +178,27 @@ export function DropzoneButton(props: Props) {
                     props.originalImage.split("/").length - 1
                   ]
                 )}`,
-                files[0],
+                files[0]
               );
 
-            const articleImages = article?.image;
-            articleImages?.forEach((image) => {
-              if (image == props.originalImage) {
-                image = newImg?.path!;
-              }
-            });
+            const updateTime = new Date(Date.now()).toISOString();
 
-            const { data: imgUrl } = await supabase
+            let newImages = article?.image!;
+
+            if (article?.image?.includes(props.originalImage)) {
+              const index = article.image.indexOf(props.originalImage);
+              newImages[index] =
+                "https://ouuvrfmbebexnjriyvmt.supabase.co/storage/v1/object/public/updates/" +
+                newImg?.path! +
+                `?t=${updateTime}`;
+            }
+
+            const { data: imgUrl, error } = await supabase
               .from("updates")
-              .update({ image: articleImages })
+              .update({ image: newImages, updated_at: updateTime })
               .eq("id", props.id);
+
+            console.log(error);
 
             //router.replace(router.asPath);
 

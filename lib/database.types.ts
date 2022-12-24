@@ -68,6 +68,7 @@ export interface Database {
           id: number
           image: string[] | null
           alt: string | null
+          updated_at: string
         }
         Insert: {
           date?: string | null
@@ -76,6 +77,7 @@ export interface Database {
           id?: number
           image?: string[] | null
           alt?: string | null
+          updated_at?: string
         }
         Update: {
           date?: string | null
@@ -84,6 +86,7 @@ export interface Database {
           id?: number
           image?: string[] | null
           alt?: string | null
+          updated_at?: string
         }
       }
       users: {

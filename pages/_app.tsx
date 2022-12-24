@@ -23,6 +23,9 @@ export default function App({
     <>
       <Head>
         <title>Page title</title>
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="pragma" content="no-cache" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -52,22 +55,24 @@ export default function App({
               }}
             >
               <Component {...pageProps} />
-              {router.pathname != "/admin" && <Footer
-                links={[
-                  {
-                    link: "/#contact",
-                    label: "Contact",
-                  },
-                  {
-                    link: "/blog",
-                    label: "Blog",
-                  },
-                  {
-                    link: "/admin",
-                    label: "Admin",
-                  },
-                ]}
-              />}
+              {router.pathname != "/admin" && (
+                <Footer
+                  links={[
+                    {
+                      link: "/#contact",
+                      label: "Contact",
+                    },
+                    {
+                      link: "/blog",
+                      label: "Blog",
+                    },
+                    {
+                      link: "/admin",
+                      label: "Admin",
+                    },
+                  ]}
+                />
+              )}
             </div>
           </NotificationsProvider>
         </MantineProvider>

@@ -138,6 +138,22 @@ export function ManageUpdates(props: Props) {
           className={classes.card}
           withBorder
         >
+          <Group position="apart">
+            <span></span>
+            <Button
+              leftIcon={<IconEdit size={17} />}
+              variant="subtle"
+              onClick={() => {
+                setOpened(article);
+                setTitle(article.desc!);
+                setDate(article.date!);
+                setImages(article.image!);
+                setAlt(article.alt!);
+              }}
+            >
+              Edit
+            </Button>
+          </Group>
           <Carousel
             withIndicators
             styles={{
@@ -204,45 +220,36 @@ export function ManageUpdates(props: Props) {
             </Modal>
             <Carousel
               withIndicators
-              classNames={{
-                root: classes.carousel,
-                controls: classes.carouselControls,
-                indicator: classes.drawerIndicator,
-              }}
               styles={{
                 control: {
                   "&[data-inactive]": {
-                    opacity: 0,
+                    opacity: "20%",
                     cursor: "default",
                   },
                 },
               }}
-              mb="md"
             >
-              {images.map((rowImage) => (
+              {images?.map((img) => (
                 <Carousel.Slide key={Math.random()}>
                   <ActionIcon
                     color="teal"
                     style={{
                       position: "absolute",
                       left: "90%",
-                      top: "2%",
+                      top: "3%",
                       zIndex: 5,
                     }}
-                    onClick={() => setModalOpened(rowImage)}
+                    onClick={() => setModalOpened(img)}
                     variant="filled"
                     size="lg"
                   >
                     <IconEdit size={23} />
                   </ActionIcon>
-                  <Center>
-                    <MantineImage
-                      src={rowImage}
-                      height={220}
-                      alt={alt ?? "An image depicting crafts and an holiday"}
-                      radius="md"
-                    />
-                  </Center>
+                  <MantineImage
+                    src={img + "?updated"}
+                    alt={alt ?? "An image depicting crafts and an holiday"}
+                    height={250}
+                  />
                 </Carousel.Slide>
               ))}
             </Carousel>
