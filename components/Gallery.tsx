@@ -53,7 +53,7 @@ function Card({ image }: Gallery) {
         alt={"An image depicting a holiday"}
         height="0"
         width="0"
-        sizes="1vw"
+        sizes="25vw"
         style={{
           width: "100%",
           height: "100%",
