@@ -158,6 +158,7 @@ export default function Home({
           allowFullScreen={undefined}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
+          title="Garden Playhouse's Location"
         />
       </Center>
       <Contact />
