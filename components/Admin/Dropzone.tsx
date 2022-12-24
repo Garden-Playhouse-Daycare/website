@@ -178,7 +178,10 @@ export function DropzoneButton(props: Props) {
                     props.originalImage.split("/").length - 1
                   ]
                 )}`,
-                files[0]
+                files[0],
+                {
+                  cacheControl: "31536000",
+                }
               );
 
             const updateTime = new Date(Date.now()).toISOString();
