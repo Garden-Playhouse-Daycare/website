@@ -8,7 +8,6 @@ import {
   Loader,
   Center,
   Paper,
-  Image,
   Group,
 } from "@mantine/core";
 import { Database } from "../lib/database.types";
@@ -16,6 +15,7 @@ import { Carousel } from "@mantine/carousel";
 import { useMediaQuery } from "@mantine/hooks";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from "react";
+import Image from "next/image";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
@@ -80,7 +80,6 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-
 interface Props {
   updateData: Updates[] | [];
 }
@@ -88,7 +87,7 @@ interface Props {
 export function ArticlesCardsGrid(props: Props) {
   const { classes, theme } = useStyles();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
-  
+
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article) => (
       <Card
@@ -111,9 +110,20 @@ export function ArticlesCardsGrid(props: Props) {
         >
           {article.image?.map((img) => (
             <Carousel.Slide key={Math.random()}>
-              <AspectRatio ratio={1920 / 1080}>
-                <Image src={img} alt={article.alt!} height={250} />
-              </AspectRatio>
+              <div style={{ position: "relative", aspectRatio: "1920 / 1080" }}>
+                <Image
+                  src={img}
+                  alt={article.alt ?? "An image depicting a holiday"}
+                  height="0"
+                  width="0"
+                  sizes="15vw"
+                  style={{
+                    width: "100%",
+                    height: 250,
+                    objectFit: "contain",
+                  }}
+                />
+              </div>
             </Carousel.Slide>
           ))}
         </Carousel>

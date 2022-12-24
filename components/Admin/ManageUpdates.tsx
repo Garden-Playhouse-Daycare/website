@@ -8,7 +8,6 @@ import {
   Loader,
   Center,
   Paper,
-  Image as MantineImage,
   Button,
   Group,
   ActionIcon,
@@ -24,6 +23,7 @@ import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
 import { IconEdit } from "@tabler/icons";
 import { DropzoneButton } from "./Dropzone";
 import { useMediaQuery } from "@mantine/hooks";
+import Image from "next/image";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
@@ -167,9 +167,22 @@ export function ManageUpdates(props: Props) {
           >
             {article.image?.map((img) => (
               <Carousel.Slide key={Math.random()}>
-                <AspectRatio ratio={1920 / 1080}>
-                  <MantineImage src={img} alt={article.alt!} height={250} />
-                </AspectRatio>
+                <div
+                  style={{ position: "relative", aspectRatio: "1920 / 1080" }}
+                >
+                  <Image
+                    src={img}
+                    alt={article.alt ?? "An image depicting a holiday"}
+                    height="0"
+                    width="0"
+                    sizes="15vw"
+                    style={{
+                      width: "100%",
+                      height: 250,
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
               </Carousel.Slide>
             ))}
           </Carousel>
@@ -205,13 +218,22 @@ export function ManageUpdates(props: Props) {
               onClose={() => setModalOpened(false)}
               title="Introduce yourself!"
             >
-              <MantineImage
-                src={modalOpened}
-                height={220}
-                alt={alt ?? "An image depicting crafts and an holiday"}
-                radius="md"
-                mb="md"
-              />
+              <div style={{ position: "relative", aspectRatio: "1920 / 1080" }}>
+                <Image
+                  src={modalOpened}
+                  alt={alt ?? "An image depicting crafts and an holiday"}
+                  height="0"
+                  width="0"
+                  sizes="15vw"
+                  style={{
+                    width: "100%",
+                    height: 250,
+                    objectFit: "contain",
+                    borderRadius: 16,
+                    marginBottom: 16,
+                  }}
+                />
+              </div>
               <DropzoneButton
                 id={opened.id}
                 setModalOpened={setModalOpened}
@@ -245,11 +267,22 @@ export function ManageUpdates(props: Props) {
                   >
                     <IconEdit size={23} />
                   </ActionIcon>
-                  <MantineImage
-                    src={img + "?updated"}
-                    alt={alt ?? "An image depicting crafts and an holiday"}
-                    height={250}
-                  />
+                  <div
+                    style={{ position: "relative", aspectRatio: "1920 / 1080" }}
+                  >
+                    <Image
+                      src={img}
+                      alt={alt ?? "An image depicting a holiday"}
+                      height="0"
+                      width="0"
+                      sizes="15vw"
+                      style={{
+                        width: "100%",
+                        height: 250,
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
                 </Carousel.Slide>
               ))}
             </Carousel>
