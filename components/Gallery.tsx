@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../lib/database.types";
+import Image from "next/image";
 
 type Gallery = Database["public"]["Tables"]["gallery"]["Row"];
 
@@ -45,13 +46,21 @@ function Card({ image }: Gallery) {
   const { classes } = useStyles();
 
   return (
-    <Paper
-      shadow="md"
-      p="xl"
-      radius="md"
-      sx={{ backgroundImage: `url(${image})` }}
-      className={classes.card}
-    ></Paper>
+    <Paper shadow="md" className={classes.card}>
+      <Image
+        src={image!}
+        alt={"An image depicting a holiday"}
+        height="0"
+        width="0"
+        sizes="1vw"
+        style={{
+          width: "100%",
+          height: 450,
+          objectFit: "fill",
+          borderRadius: 16,
+        }}
+      />
+    </Paper>
   );
 }
 
