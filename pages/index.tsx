@@ -174,6 +174,9 @@ export default function Home({
     );
   } else {
     return (
+      <>
+      <Head>
+      </Head>
       <div style={{ height: "100vh" }}>
         <div
           style={{
@@ -187,6 +190,7 @@ export default function Home({
           </Center>
         </div>
       </div>
+      </>
     );
   }
 }

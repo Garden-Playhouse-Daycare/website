@@ -207,6 +207,7 @@ export function HeaderResponsive() {
             opened={drawerOpened}
             onClick={toggleDrawer}
             className={classes.hiddenDesktop}
+            aria-label="Open navigation"
           />
         </Group>
       </Header>

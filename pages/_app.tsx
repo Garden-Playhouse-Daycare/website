@@ -9,6 +9,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { Footer } from "../components/Footer";
 import { HeaderResponsive } from "../components/HeaderResponsive";
 import { useRouter } from "next/router";
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App({
   Component,
@@ -73,6 +74,7 @@ export default function App({
                   ]}
                 />
               )}
+              <Analytics />
             </div>
           </NotificationsProvider>
         </MantineProvider>
