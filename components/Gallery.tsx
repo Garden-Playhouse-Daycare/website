@@ -6,6 +6,7 @@ import {
   Text,
   Title,
   Button,
+  Center,
   useMantineTheme,
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -55,8 +56,8 @@ function Card({ image }: Gallery) {
         sizes="1vw"
         style={{
           width: "100%",
-          height: 450,
-          objectFit: "fill",
+          height: "100%",
+          objectFit: "cover",
           borderRadius: 16,
         }}
       />
