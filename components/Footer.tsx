@@ -1,6 +1,7 @@
 import { createStyles, Container, Group, Anchor } from "@mantine/core";
 import { MantineLogo } from "@mantine/ds";
 import Link from "next/link";
+import Logo from "./Logo";
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -23,6 +24,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   links: {
+    marginBottom: theme.spacing.xs / 2.8,
     [theme.fn.smallerThan("xs")]: {
       marginTop: theme.spacing.md,
     },
@@ -48,7 +50,7 @@ export function Footer({ links, top }: FooterSimpleProps) {
     <div className={classes.footer}>
       <Container className={classes.inner}>
         <Link href="/">
-          <MantineLogo size={28} />
+          <Logo height={37} />
         </Link>
         <Group className={classes.links}>{items}</Group>
       </Container>

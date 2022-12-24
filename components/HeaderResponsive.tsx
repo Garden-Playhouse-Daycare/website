@@ -18,6 +18,7 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import { MantineLogo } from "@mantine/ds";
+import Logo from "./Logo";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
   IconNotification,
@@ -171,7 +172,7 @@ export function HeaderResponsive() {
     <Box pb={!mobileMatch ? 120 : 100}>
       <Header height={60} px="md" fixed>
         <Group position="apart" sx={{ height: "100%" }}>
-          <MantineLogo size={30} />
+          <Logo height={38} />
 
           <Group
             sx={{ height: "100%" }}
