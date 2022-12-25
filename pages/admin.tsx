@@ -57,7 +57,7 @@ export default function Admin({
     return (
       <>
         <Head>
-          <title>Garden Playhouse Daycare - Admin Login</title>
+          <title>Garden Playhouse Daycare - Admin</title>
           <meta name="robots" content="noindex" />
         </Head>
         <div style={{ height: "100vh" }}>
@@ -79,7 +79,7 @@ export default function Admin({
     return (
       <>
         <Head>
-          <title>Garden Playhouse Daycare - Admin Center</title>
+          <title>Garden Playhouse Daycare - Admin Login</title>
           <meta name="robots" content="noindex" />
         </Head>
         <HeaderResponsive />
@@ -88,11 +88,17 @@ export default function Admin({
     );
   } else {
     return (
-      <Dashboard
-        updateData={updateData}
-        reviewData={reviewData}
-        galleryData={galleryData}
-      />
+      <>
+        <Head>
+          <title>Garden Playhouse Daycare - Admin Login</title>
+          <meta name="robots" content="noindex" />
+        </Head>
+        <Dashboard
+          updateData={updateData}
+          reviewData={reviewData}
+          galleryData={galleryData}
+        />
+      </>
     );
   }
 }

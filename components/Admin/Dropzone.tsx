@@ -54,6 +54,7 @@ const useStyles = createStyles((theme) => ({
 interface Props {
   id: number;
   setModalOpened: Dispatch<any>;
+  setOpened: Dispatch<any>;
   originalImage: string;
 }
 
@@ -61,6 +62,7 @@ export function DropzoneButton(props: Props) {
   const { classes, theme } = useStyles();
   const openRef = useRef<() => void>(null);
   const [files, setFiles] = useState<FileWithPath[]>([]);
+  const [loading, setLoading] = useState(false);
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const supabase = useSupabaseClient<Database>();
   const router = useRouter();
@@ -148,6 +150,7 @@ export function DropzoneButton(props: Props) {
         <Button
           mt="lg"
           size="sm"
+          disabled={loading}
           variant="outline"
           color="red"
           onClick={() => {
@@ -160,8 +163,10 @@ export function DropzoneButton(props: Props) {
         <Button
           mt="lg"
           size="sm"
-          disabled={previews.length === 0}
+          disabled={previews.length === 0 || loading}
+          loading={loading}
           onClick={async () => {
+            setLoading(true);
             const { data: article } = await supabase
               .from("updates")
               .select()
@@ -196,16 +201,15 @@ export function DropzoneButton(props: Props) {
                 `?t=${updateTime}`;
             }
 
-            const { data: imgUrl, error } = await supabase
+            const { data: imgUrl } = await supabase
               .from("updates")
               .update({ image: newImages, updated_at: updateTime })
               .eq("id", props.id);
 
-            console.log(error);
+            router.replace(router.asPath);
 
-            //router.replace(router.asPath);
-
-            //props.setModalOpened(false);
+            props.setModalOpened(false);
+            props.setOpened(false);
           }}
         >
           Save Changes

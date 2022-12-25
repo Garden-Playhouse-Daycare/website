@@ -176,7 +176,7 @@ export function ManageUpdates(props: Props) {
                     alt={article.alt ?? "An image depicting a holiday"}
                     height="0"
                     width="0"
-                    sizes={!mobile ? "10vw" : "35vw"}
+                    sizes={!mobile ? "15vw" : "35vw"}
                     style={{
                       width: "100%",
                       height: 250,
@@ -239,6 +239,7 @@ export function ManageUpdates(props: Props) {
                 id={opened.id}
                 setModalOpened={setModalOpened}
                 originalImage={modalOpened}
+                setOpened={setOpened}
               />
             </Modal>
             <Carousel
@@ -259,7 +260,7 @@ export function ManageUpdates(props: Props) {
                     style={{
                       position: "absolute",
                       left: "90%",
-                      top: "3%",
+                      top: "0%",
                       zIndex: 5,
                     }}
                     onClick={() => setModalOpened(img)}
