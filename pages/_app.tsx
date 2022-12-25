@@ -24,9 +24,6 @@ export default function App({
     <>
       <Head>
         <title>Page title</title>
-        <meta http-equiv="cache-control" content="no-cache" />
-        <meta http-equiv="expires" content="0" />
-        <meta http-equiv="pragma" content="no-cache" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"

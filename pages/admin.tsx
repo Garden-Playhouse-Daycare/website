@@ -28,6 +28,7 @@ import { useRouter } from "next/router";
 import { Database } from "../lib/database.types";
 import { GetServerSidePropsContext } from "next";
 import { DataProps } from "../lib/DataProps";
+import Head from "next/head";
 
 interface Props {
   session: Session | null;
@@ -54,29 +55,45 @@ export default function Admin({
 
   if (session == undefined) {
     return (
-      <div style={{ height: "100vh" }}>
-        <div
-          style={{
-            position: "relative",
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
-        >
-          <Center>
-            <Loader variant="dots" size="xl" />
-          </Center>
+      <>
+        <Head>
+          <title>Garden Playhouse Daycare - Admin Login</title>
+          <meta name="robots" content="noindex" />
+        </Head>
+        <div style={{ height: "100vh" }}>
+          <div
+            style={{
+              position: "relative",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
+            <Center>
+              <Loader variant="dots" size="xl" />
+            </Center>
+          </div>
         </div>
-      </div>
+      </>
     );
   } else if (session.session == null) {
     return (
       <>
+        <Head>
+          <title>Garden Playhouse Daycare - Admin Center</title>
+          <meta name="robots" content="noindex" />
+        </Head>
         <HeaderResponsive />
         <Login />
       </>
     );
   } else {
-    return <Dashboard updateData={updateData} reviewData={reviewData} galleryData={galleryData} />;
+    return (
+      <Dashboard
+        updateData={updateData}
+        reviewData={reviewData}
+        galleryData={galleryData}
+      />
+    );
   }
 }
 

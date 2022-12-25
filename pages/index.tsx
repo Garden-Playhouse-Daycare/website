@@ -53,6 +53,10 @@ export default function Home({
   if (!loading) {
     return (
       <>
+        <Head>
+          <title>Garden Playhouse Daycare - Home</title>
+          <meta name="robots" content="all" />
+        </Head>
         <HeaderResponsive />
         {mobileMatch && (
           <Image
@@ -175,21 +179,23 @@ export default function Home({
   } else {
     return (
       <>
-      <Head>
-      </Head>
-      <div style={{ height: "100vh" }}>
-        <div
-          style={{
-            position: "relative",
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
-        >
-          <Center>
-            <Loader variant="dots" size="xl" />
-          </Center>
+        <Head>
+          <title>Garden Playhouse Daycare - Home</title>
+          <meta name="robots" content="all" />
+        </Head>
+        <div style={{ height: "100vh" }}>
+          <div
+            style={{
+              position: "relative",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
+            <Center>
+              <Loader variant="dots" size="xl" />
+            </Center>
+          </div>
         </div>
-      </div>
       </>
     );
   }
