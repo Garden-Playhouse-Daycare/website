@@ -116,7 +116,7 @@ export function ArticlesCardsGrid(props: Props) {
                   alt={article.alt ?? "An image depicting a holiday"}
                   height="0"
                   width="0"
-                  sizes="15vw"
+                  sizes="10vw"
                   style={{
                     width: "100%",
                     height: 250,
