@@ -10,6 +10,7 @@ import { Footer } from "../components/Footer";
 import { HeaderResponsive } from "../components/HeaderResponsive";
 import { useRouter } from "next/router";
 import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
 
 export default function App({
   Component,
@@ -45,6 +46,17 @@ export default function App({
         />
         <meta property="og:type" content="website" />
       </Head>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-G3ESBG7F9V"
+      ></Script>
+      <Script id="google-analytics">
+        {`window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-G3ESBG7F9V');`}
+      </Script>
 
       <SessionContextProvider
         supabaseClient={supabaseClient}
