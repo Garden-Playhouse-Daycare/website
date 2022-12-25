@@ -49,7 +49,7 @@ export function Footer({ links, top }: FooterSimpleProps) {
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
-        <Link href="/">
+        <Link href="/" aria-label="Garden Playhouse's Logo">
           <Logo height={37} />
         </Link>
         <Group className={classes.links}>{items}</Group>
