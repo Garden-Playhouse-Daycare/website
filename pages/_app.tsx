@@ -9,7 +9,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { Footer } from "../components/Footer";
 import { HeaderResponsive } from "../components/HeaderResponsive";
 import { useRouter } from "next/router";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
 
 export default function App({
   Component,
@@ -24,10 +24,26 @@ export default function App({
     <>
       <Head>
         <title>Page title</title>
+        <meta charSet="utf-8" />
+        <meta
+          name="keywords"
+          content="garden playhouse daycare, childcare near me, home daycare, fremont daycare, preschools near me, pre-schools in fremont california, garden playhouse, daycare, pre-school, preschool, daycare in Fremont California, daycare near me, garden playhouse, garden daycare, daycare, "
+        />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <meta
+          name="description"
+          content="The perfect daycare for your toddler ran in Fremont, California."
+          key="desc"
+        />
+        <meta property="og:title" content="Garden Playhouse Daycare" />
+        <meta
+          property="og:description"
+          content="The perfect daycare ran in Fremont, California"
+        />
+        <meta property="og:type" content="website" />
       </Head>
 
       <SessionContextProvider

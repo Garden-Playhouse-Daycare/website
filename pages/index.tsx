@@ -56,6 +56,7 @@ export default function Home({
         <Head>
           <title>Garden Playhouse Daycare - Home</title>
           <meta name="robots" content="all" />
+          <meta property="og:URL" content="https://gardenplayhouse.net" />
         </Head>
         <HeaderResponsive />
         {mobileMatch && (
