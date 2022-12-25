@@ -175,7 +175,7 @@ export function ManageUpdates(props: Props) {
                     alt={article.alt ?? "An image depicting a holiday"}
                     height="0"
                     width="0"
-                    sizes="15vw"
+                    sizes={!mobile ? "10vw" : "35vw"}
                     style={{
                       width: "100%",
                       height: 250,
