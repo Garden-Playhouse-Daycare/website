@@ -86,7 +86,7 @@ interface Props {
 
 export function ArticlesCardsGrid(props: Props) {
   const { classes, theme } = useStyles();
-  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
+  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.md}px)`);
 
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article) => (
@@ -116,7 +116,7 @@ export function ArticlesCardsGrid(props: Props) {
                   alt={article.alt ?? "An image depicting a holiday"}
                   height="0"
                   width="0"
-                  sizes="10vw"
+                  sizes={!mobile ? "10vw" : "50vw"}
                   style={{
                     width: "100%",
                     height: 250,
