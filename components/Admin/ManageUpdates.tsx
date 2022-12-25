@@ -127,6 +127,7 @@ export function ManageUpdates(props: Props) {
   const [images, setImages] = useState<string[]>([]);
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const [modalOpened, setModalOpened] = useState<any>(false);
+  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.md}px)`);
 
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article, index) => (
