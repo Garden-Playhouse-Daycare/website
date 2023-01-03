@@ -4,28 +4,32 @@ import {
   Card,
   Text,
   Container,
-  AspectRatio,
   Loader,
-  Center,
-  Paper,
   Button,
   Group,
   ActionIcon,
   Drawer,
   useMantineTheme,
   Modal,
+  Alert,
+  Center,
+  Paper,
+  Stack,
+  Title,
+  Box,
 } from "@mantine/core";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useState } from "react";
 import { Database } from "../../lib/database.types";
-import { FileObject } from "../../lib/FileObject";
 import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
-import { IconEdit } from "@tabler/icons";
+import { IconEdit, IconInfoCircle, IconCirclePlus } from "@tabler/icons";
 import { DropzoneButton } from "./Dropzone";
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
+import { AddDropzone } from "./AddDropzone";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
+type UpdateTags = Database["public"]["Tables"]["update_tags"]["Row"];
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   card: {
@@ -36,6 +40,27 @@ const useStyles = createStyles((theme, _params, getRef) => ({
       boxShadow: theme.shadows.md,
       backgroundColor: "#F8F9FA",
     },
+  },
+
+  addCard: {
+    backgroundColor: theme.colors.teal[theme.fn.primaryShade()],
+    transition: "transform 150ms ease, box-shadow 150ms ease",
+
+    "&:hover": {
+      transform: "scale(1.02)",
+      boxShadow: theme.shadows.md,
+      backgroundColor: theme.colors.teal[theme.fn.primaryShade() - 1],
+    },
+  },
+
+  add: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    borderRadius: theme.radius.md,
+    transition: "box-shadow 150ms ease, transform 100ms ease",
   },
 
   title: {
@@ -114,6 +139,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 interface Props {
   updateData: Updates[] | [];
+  updateTags: UpdateTags[] | [];
 }
 
 export function ManageUpdates(props: Props) {
@@ -128,6 +154,8 @@ export function ManageUpdates(props: Props) {
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const [modalOpened, setModalOpened] = useState<any>(false);
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.md}px)`);
+  const [closed, setClosed] = useState(false);
+  const [add, setAdd] = useState(false);
 
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article, index) => (
@@ -138,6 +166,11 @@ export function ManageUpdates(props: Props) {
           radius="md"
           className={classes.card}
           withBorder
+          style={
+            index < 4
+              ? { borderColor: theme.colors.green[theme.fn.primaryShade()] }
+              : undefined
+          }
         >
           <Group position="apart">
             <span></span>
@@ -173,6 +206,7 @@ export function ManageUpdates(props: Props) {
                 >
                   <Image
                     src={img}
+                    priority
                     alt={article.alt ?? "An image depicting a holiday"}
                     height="0"
                     width="0"
@@ -203,94 +237,154 @@ export function ManageUpdates(props: Props) {
 
     return (
       <Container py="xl">
-        <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
-          <Drawer
-            opened={opened}
-            overlayColor={theme.colors.gray[2]}
-            overlayOpacity={0.1}
-            onClose={() => setOpened(false)}
-            title="Edit Update"
-            padding="xl"
-            size="xl"
-            position="right"
+        <Alert
+          icon={<IconInfoCircle size={16} />}
+          title="Tip"
+          color="teal"
+          mb="xl"
+          withCloseButton
+          hidden={closed}
+          onClose={() => setClosed(true)}
+          closeButtonLabel="Close tip"
+        >
+          Cards in green are the one shown to the user on the home page
+        </Alert>
+        <Center>
+          <Button
+            mb="lg"
+            size="md"
+            leftIcon={<IconCirclePlus />}
+            onClick={() => {
+              setOpened(true);
+              setAdd(true);
+            }}
           >
-            <Modal
-              opened={modalOpened}
-              onClose={() => setModalOpened(false)}
-              title="Introduce yourself!"
-            >
-              <div style={{ position: "relative", aspectRatio: "1920 / 1080" }}>
-                <Image
-                  src={modalOpened}
-                  alt={alt ?? "An image depicting crafts and an holiday"}
-                  height="0"
-                  width="0"
-                  sizes="15vw"
-                  style={{
-                    width: "100%",
-                    height: 250,
-                    objectFit: "contain",
-                    borderRadius: 16,
-                    marginBottom: 16,
-                  }}
-                />
-              </div>
-              <DropzoneButton
-                id={opened.id}
-                setModalOpened={setModalOpened}
-                originalImage={modalOpened}
-                setOpened={setOpened}
-              />
-            </Modal>
-            <Carousel
-              withIndicators
-              styles={{
-                control: {
-                  "&[data-inactive]": {
-                    opacity: "20%",
-                    cursor: "default",
-                  },
-                },
-              }}
-            >
-              {images?.map((img) => (
-                <Carousel.Slide key={Math.random()}>
-                  <ActionIcon
-                    color="teal"
-                    style={{
-                      position: "absolute",
-                      left: "90%",
-                      top: "0%",
-                      zIndex: 5,
-                    }}
-                    onClick={() => setModalOpened(img)}
-                    variant="filled"
-                    size="lg"
-                  >
-                    <IconEdit size={23} />
-                  </ActionIcon>
-                  <div
-                    style={{ position: "relative", aspectRatio: "1920 / 1080" }}
-                  >
-                    <Image
-                      src={img}
-                      alt={alt ?? "An image depicting a holiday"}
-                      height="0"
-                      width="0"
-                      sizes="15vw"
-                      style={{
-                        width: "100%",
-                        height: 250,
-                        objectFit: "contain",
-                      }}
-                    />
-                  </div>
-                </Carousel.Slide>
-              ))}
-            </Carousel>
-          </Drawer>
+            Add new update
+          </Button>
+        </Center>
+        <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
           {cards}
         </SimpleGrid>
+        <Drawer
+          opened={opened}
+          overlayColor={theme.colors.gray[2]}
+          overlayOpacity={0.1}
+          onClose={() => {
+            setOpened(false);
+            setImages([]);
+            if (add) setAdd(false);
+          }}
+          title="Edit Update"
+          padding="md"
+          size="xl"
+          position="right"
+          styles={(theme) => ({
+            drawer: {
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+
+              "& > :nth-child(2)": {
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                minHeight: 0, // all of these styles is to have a scroll wheel inside the drawer
+              },
+            },
+          })}
+        >
+          {/* The box component is for scrolling on drawer. PX is to add padding on to the content, the MX is to offset the padding on the actual drawer (title component and other meta-drawer components) */}
+          <Box sx={{ flexGrow: 1, overflow: "auto" }} px="xl" mx={-16}>
+            {!add ? (
+              <Modal
+                opened={modalOpened}
+                onClose={() => {
+                  setModalOpened(false);
+                }}
+                title="Edit this image"
+              >
+                <div
+                  style={{ position: "relative", aspectRatio: "1920 / 1080" }}
+                >
+                  <Image
+                    src={modalOpened}
+                    alt={alt ?? "An image depicting crafts and an holiday"}
+                    height="0"
+                    width="0"
+                    sizes="15vw"
+                    style={{
+                      width: "100%",
+                      height: 250,
+                      objectFit: "contain",
+                      borderRadius: 16,
+                      marginBottom: 16,
+                    }}
+                  />
+                </div>
+                <DropzoneButton
+                  id={opened.id}
+                  setModalOpened={setModalOpened}
+                  originalImage={modalOpened}
+                  setOpened={setOpened}
+                />
+              </Modal>
+            ) : (
+              <AddDropzone updateTags={props.updateTags} />
+            )}
+
+            {!add && (
+              <Carousel
+                withIndicators
+                styles={{
+                  control: {
+                    "&[data-inactive]": {
+                      opacity: "20%",
+                      cursor: "default",
+                    },
+                  },
+                }}
+              >
+                {images?.map((img) => (
+                  <Carousel.Slide key={Math.random()}>
+                    <ActionIcon
+                      color="teal"
+                      style={{
+                        position: "absolute",
+                        left: "90%",
+                        top: "0%",
+                        zIndex: 5,
+                      }}
+                      onClick={() => setModalOpened(img)}
+                      variant="filled"
+                      size="lg"
+                    >
+                      <IconEdit size={23} />
+                    </ActionIcon>
+                    <div
+                      style={{
+                        position: "relative",
+                        aspectRatio: "1920 / 1080",
+                      }}
+                    >
+                      <Image
+                        src={img}
+                        alt={alt ?? "An image depicting a holiday"}
+                        height="0"
+                        width="0"
+                        sizes="15vw"
+                        style={{
+                          width: "100%",
+                          height: 250,
+                          objectFit: "contain",
+                        }}
+                      />
+                    </div>
+                  </Carousel.Slide>
+                ))}
+              </Carousel>
+            )}
+          </Box>
+        </Drawer>
       </Container>
     );
   } else {

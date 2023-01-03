@@ -90,7 +90,7 @@ const Dashboard = (props: DataProps) => {
         </Header>
       }
     >
-      {active == links[0] && <ManageUpdates updateData={props.updateData} />}
+      {active == links[0] && <ManageUpdates updateData={props.updateData} updateTags={props.updateTags} />}
     </AppShell>
   );
 };
