@@ -175,9 +175,7 @@ export function DropzoneButton(props: Props) {
             const { data: newImg } = await supabase.storage
               .from("updates")
               .update(
-                `${article?.date?.split("-")[0]}${
-                  article?.tag
-                }/${decodeURIComponent(
+                `${article?.tag}/${decodeURIComponent(
                   props.originalImage.split("/")[
                     props.originalImage.split("/").length - 1
                   ]

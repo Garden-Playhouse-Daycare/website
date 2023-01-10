@@ -5,13 +5,8 @@ import {
   Button,
   createStyles,
   Image,
-  SimpleGrid,
-  Center,
-  Container,
-  Card,
   Paper,
   TextInput,
-  Autocomplete,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { Dropzone, MIME_TYPES, FileWithPath } from "@mantine/dropzone";
@@ -21,10 +16,10 @@ import {
   IconDownload,
   IconTrashX,
 } from "@tabler/icons";
-import { useHover, useMediaQuery } from "@mantine/hooks";
+import { useMediaQuery } from "@mantine/hooks";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/database.types";
-import { useRouter } from "next/router";
+import randomWords from "random-words";
 type UpdateTags = Database["public"]["Tables"]["update_tags"]["Row"];
 
 const useStyles = createStyles((theme) => ({
@@ -64,11 +59,9 @@ export function AddDropzone(props: Props) {
   const [loading, setLoading] = useState(false);
   const [desc, setDesc] = useState("");
   const [alt, setAlt] = useState("");
-  const [tag, setTag] = useState();
   const [date, setDate] = useState<any>(new Date());
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const supabase = useSupabaseClient<Database>();
-  const router = useRouter();
 
   const previews = files.map((file, index) => {
     const imageUrl = URL.createObjectURL(file);
@@ -185,30 +178,30 @@ export function AddDropzone(props: Props) {
         onChange={setDate}
         weekendDays={[]}
       />
-      <Autocomplete
-        mt="md"
-        description="You may need to scroll down to find all tags"
-        placeholder="Choose a tag which describes this update"
-        label="Update Tag"
-        withAsterisk
-        maxDropdownHeight={200}
-        limit={30}
-        data={props.updateTags.map((tag) => {
-          return { value: tag.tags };
-        })}
-      />
 
       <Button
         mt="xl"
         size="md"
-        disabled={files.length === 0 || !desc || !alt || !tag || loading}
+        disabled={
+          files.length === 0 || desc.length == 0 || alt.length == 0 || loading
+        }
         loading={loading}
         onClick={async () => {
           setLoading(true);
+          const updateDate = `${date.getFullYear()}-${String(
+            date.getMonth() + 1
+          ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
-        
 
-
+          const updateTime: string = date.toISOString();
+          const randomTag = randomWords({
+            exactly: 1,
+            wordsPerString: 3,
+            separator: "",
+            formatter: (word, index) => {
+              return word.slice(0, 1).toUpperCase().concat(word.slice(1));
+            },
+          })[0];
           setLoading(false);
         }}
       >
