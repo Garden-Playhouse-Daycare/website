@@ -25,82 +25,68 @@ export interface Database {
       }
       reviews: {
         Row: {
-          id: number
           date: string | null
-          name: string | null
           desc: string | null
+          id: number
+          name: string | null
           profile: string | null
         }
         Insert: {
-          id?: number
           date?: string | null
-          name?: string | null
           desc?: string | null
+          id?: number
+          name?: string | null
           profile?: string | null
         }
         Update: {
-          id?: number
           date?: string | null
-          name?: string | null
           desc?: string | null
+          id?: number
+          name?: string | null
           profile?: string | null
-        }
-      }
-      update_tags: {
-        Row: {
-          id: number
-          tags: string
-        }
-        Insert: {
-          id?: number
-          tags?: string
-        }
-        Update: {
-          id?: number
-          tags?: string
         }
       }
       updates: {
         Row: {
+          alt: string | null
           date: string | null
           desc: string | null
-          tag: string | null
           id: number
           image: string[] | null
-          alt: string | null
+          tag: string | null
           updated_at: string
         }
         Insert: {
+          alt?: string | null
           date?: string | null
           desc?: string | null
-          tag?: string | null
           id?: number
           image?: string[] | null
-          alt?: string | null
+          tag?: string | null
           updated_at?: string
         }
         Update: {
+          alt?: string | null
           date?: string | null
           desc?: string | null
-          tag?: string | null
           id?: number
           image?: string[] | null
-          alt?: string | null
+          tag?: string | null
           updated_at?: string
         }
       }
       users: {
         Row: {
-          id: number
           email: string | null
+          id: number
         }
         Insert: {
-          id?: number
           email?: string | null
+          id?: number
         }
         Update: {
-          id?: number
           email?: string | null
+          id?: number
         }
       }
     }

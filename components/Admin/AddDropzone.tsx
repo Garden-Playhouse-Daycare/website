@@ -13,6 +13,7 @@ import { Dropzone, MIME_TYPES, FileWithPath } from "@mantine/dropzone";
 import {
   IconCloudUpload,
   IconX,
+  IconCheck,
   IconDownload,
   IconTrashX,
 } from "@tabler/icons";
@@ -20,7 +21,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/database.types";
 import randomWords from "random-words";
-type UpdateTags = Database["public"]["Tables"]["update_tags"]["Row"];
+import { showNotification } from "@mantine/notifications";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -49,7 +50,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
-  updateTags: UpdateTags[] | [];
+  setOpened: Dispatch<any>;
 }
 
 export function AddDropzone(props: Props) {
@@ -192,17 +193,59 @@ export function AddDropzone(props: Props) {
             date.getMonth() + 1
           ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
-
           const updateTime: string = date.toISOString();
-          const randomTag = randomWords({
-            exactly: 1,
-            wordsPerString: 3,
-            separator: "",
-            formatter: (word, index) => {
-              return word.slice(0, 1).toUpperCase().concat(word.slice(1));
+          const randomTag =
+            Math.floor(Math.random() * 10000 + 1).toString() +
+            randomWords({
+              exactly: 1,
+              wordsPerString: 3,
+              separator: "",
+              formatter: (word, index) => {
+                return word.slice(0, 1).toUpperCase().concat(word.slice(1));
+              },
+            })[0];
+
+          let images: string[] = [];
+
+          for (let i = 0; i < files.length; i++) {
+            const { data, error } = await supabase.storage
+              .from("updates")
+              .upload(`${randomTag}/${files[i].name}`, files[i], {
+                cacheControl: "31536000",
+              });
+
+            if (!error && data.path) {
+              images.push(
+                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/updates/${data.path}`
+              );
+            } else {
+              console.log(error ?? "Success.");
+            }
+          }
+
+          const { data, error } = await supabase.from("updates").insert([
+            {
+              date: updateDate,
+              desc: desc,
+              tag: randomTag,
+              image: images,
+              alt: alt,
+              updated_at: updateTime,
             },
-          })[0];
+          ]);
+
+          if (error) console.log(error);
+
           setLoading(false);
+          props.setOpened(false);
+
+          showNotification({
+            title: "Update Added",
+            message: "Your update was successfully created.",
+            icon: <IconCheck />,
+            color: "green",
+            autoClose: 2000,
+          });
         }}
       >
         Add Update

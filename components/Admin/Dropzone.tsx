@@ -14,11 +14,13 @@ import {
   IconX,
   IconDownload,
   IconTrashX,
+  IconCheck
 } from "@tabler/icons";
 import { useHover, useMediaQuery } from "@mantine/hooks";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/database.types";
 import { useRouter } from "next/router";
+import { showNotification } from "@mantine/notifications";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -194,7 +196,7 @@ export function DropzoneButton(props: Props) {
               const index = article.image.indexOf(props.originalImage);
               newImages[index] =
                 "https://ouuvrfmbebexnjriyvmt.supabase.co/storage/v1/object/public/updates/" +
-                newImg?.path! +
+                newImg?.path!.split("?t")[0] +
                 `?t=${updateTime}`;
             }
 
@@ -207,6 +209,14 @@ export function DropzoneButton(props: Props) {
 
             props.setModalOpened(false);
             props.setOpened(false);
+
+            showNotification({
+              title: "Updated update",
+              message: "Your update was updated.",
+              icon: <IconCheck />,
+              color: "green",
+              autoClose: 2000,
+            });
           }}
         >
           Save Changes

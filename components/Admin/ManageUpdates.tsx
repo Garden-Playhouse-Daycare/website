@@ -29,7 +29,6 @@ import Image from "next/image";
 import { AddDropzone } from "./AddDropzone";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
-type UpdateTags = Database["public"]["Tables"]["update_tags"]["Row"];
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   card: {
@@ -139,7 +138,6 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 interface Props {
   updateData: Updates[] | [];
-  updateTags: UpdateTags[] | [];
 }
 
 export function ManageUpdates(props: Props) {
@@ -159,80 +157,76 @@ export function ManageUpdates(props: Props) {
 
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article, index) => (
-      <>
-        <Card
-          key={article.id}
-          p="md"
-          radius="md"
-          className={classes.card}
-          withBorder
-          style={
-            index < 4
-              ? { borderColor: theme.colors.green[theme.fn.primaryShade()] }
-              : undefined
-          }
-        >
-          <Group position="apart">
-            <span></span>
-            <Button
-              leftIcon={<IconEdit size={17} />}
-              variant="subtle"
-              onClick={() => {
-                setOpened(article);
-                setTitle(article.desc!);
-                setDate(article.date!);
-                setImages(article.image!);
-                setAlt(article.alt!);
-              }}
-            >
-              Edit
-            </Button>
-          </Group>
-          <Carousel
-            withIndicators
-            styles={{
-              control: {
-                "&[data-inactive]": {
-                  opacity: "20%",
-                  cursor: "default",
-                },
-              },
+      <Card
+        key={article.id}
+        p="md"
+        radius="md"
+        className={classes.card}
+        withBorder
+        style={
+          index < 4
+            ? { borderColor: theme.colors.green[theme.fn.primaryShade()] }
+            : undefined
+        }
+      >
+        <Group position="apart">
+          <span></span>
+          <Button
+            leftIcon={<IconEdit size={17} />}
+            variant="subtle"
+            onClick={() => {
+              setOpened(article);
+              setTitle(article.desc!);
+              setDate(article.date!);
+              setImages(article.image!);
+              setAlt(article.alt!);
             }}
           >
-            {article.image?.map((img) => (
-              <Carousel.Slide key={Math.random()}>
-                <div
-                  style={{ position: "relative", aspectRatio: "1920 / 1080" }}
-                >
-                  <Image
-                    src={img}
-                    priority
-                    alt={article.alt ?? "An image depicting a holiday"}
-                    height="0"
-                    width="0"
-                    sizes={!mobile ? "15vw" : "35vw"}
-                    style={{
-                      width: "100%",
-                      height: 250,
-                      objectFit: "contain",
-                    }}
-                  />
-                </div>
-              </Carousel.Slide>
-            ))}
-          </Carousel>
-          <Text
-            color="dimmed"
-            size="xs"
-            transform="uppercase"
-            weight={700}
-            mt="md"
-          >
-            {article.date}
-          </Text>
-          <Text mt={5}>{article.desc}</Text>
-        </Card>
-      </>
+            Edit
+          </Button>
+        </Group>
+        <Carousel
+          withIndicators
+          styles={{
+            control: {
+              "&[data-inactive]": {
+                opacity: "20%",
+                cursor: "default",
+              },
+            },
+          }}
+        >
+          {article.image?.map((img) => (
+            <Carousel.Slide key={img}>
+              <div style={{ position: "relative", aspectRatio: "1920 / 1080" }}>
+                <Image
+                  src={img}
+                  priority
+                  alt={article.alt ?? "An image depicting a holiday"}
+                  height="0"
+                  width="0"
+                  sizes={!mobile ? "15vw" : "35vw"}
+                  style={{
+                    width: "100%",
+                    height: 250,
+                    objectFit: "contain",
+                  }}
+                />
+              </div>
+            </Carousel.Slide>
+          ))}
+        </Carousel>
+        <Text
+          color="dimmed"
+          size="xs"
+          transform="uppercase"
+          weight={700}
+          mt="md"
+        >
+          {article.date}
+        </Text>
+        <Text mt={5}>{article.desc}</Text>
+      </Card>
     ));
 
     return (
@@ -284,7 +278,7 @@ export function ManageUpdates(props: Props) {
               flexDirection: "column",
               height: "100%",
 
-              "& > :nth-child(2)": {
+              "& > :nth-of-type(2)": {
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
@@ -329,7 +323,7 @@ export function ManageUpdates(props: Props) {
                 />
               </Modal>
             ) : (
-              <AddDropzone updateTags={props.updateTags} />
+              <AddDropzone setOpened={setOpened} />
             )}
 
             {!add && (
@@ -345,7 +339,7 @@ export function ManageUpdates(props: Props) {
                 }}
               >
                 {images?.map((img) => (
-                  <Carousel.Slide key={Math.random()}>
+                  <Carousel.Slide key={img}>
                     <ActionIcon
                       color="teal"
                       style={{
