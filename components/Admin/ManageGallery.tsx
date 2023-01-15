@@ -303,6 +303,7 @@ export function ManageGallery(props: Props) {
                   />
                 </div>
                 <DropzoneButton
+                  update={false}
                   id={opened.id}
                   setModalOpened={setModalOpened}
                   originalImage={modalOpened}

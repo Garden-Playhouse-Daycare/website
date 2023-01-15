@@ -329,6 +329,7 @@ export function ManageUpdates(props: Props) {
                   setModalOpened={setModalOpened}
                   originalImage={modalOpened}
                   setOpened={setOpened}
+                  update={true}
                 />
               </Modal>
             ) : (

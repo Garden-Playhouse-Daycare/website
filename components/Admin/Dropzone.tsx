@@ -14,7 +14,7 @@ import {
   IconX,
   IconDownload,
   IconTrashX,
-  IconCheck
+  IconCheck,
 } from "@tabler/icons";
 import { useHover, useMediaQuery } from "@mantine/hooks";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -57,6 +57,7 @@ interface Props {
   setModalOpened: Dispatch<any>;
   setOpened: Dispatch<any>;
   originalImage: string;
+  update: boolean;
 }
 
 export function DropzoneButton(props: Props) {
@@ -168,56 +169,104 @@ export function DropzoneButton(props: Props) {
           loading={loading}
           onClick={async () => {
             setLoading(true);
-            const { data: article } = await supabase
-              .from("updates")
-              .select()
-              .eq("id", props.id)
-              .single();
+            if (props.update) {
+              const { data: article } = await supabase
+                .from("updates")
+                .select()
+                .eq("id", props.id)
+                .single();
 
-            const { data: newImg } = await supabase.storage
-              .from("updates")
-              .update(
-                `${article?.tag}/${decodeURIComponent(
-                  props.originalImage.split("/")[
-                    props.originalImage.split("/").length - 1
-                  ]
-                )}`,
-                files[0],
-                {
-                  cacheControl: "31536000",
-                }
-              );
+              const { data: newImg } = await supabase.storage
+                .from("updates")
+                .update(
+                  `${article?.tag}/${decodeURIComponent(
+                    props.originalImage.split("/")[
+                      props.originalImage.split("/").length - 1
+                    ]
+                  )}`,
+                  files[0],
+                  {
+                    cacheControl: "31536000",
+                  }
+                );
 
-            const updateTime = new Date(Date.now()).toISOString();
+              const updateTime = new Date(Date.now()).toISOString();
 
-            let newImages = article?.image!;
+              let newImages = article?.image!;
 
-            if (article?.image?.includes(props.originalImage)) {
-              const index = article.image.indexOf(props.originalImage);
-              newImages[index] =
-                "https://ouuvrfmbebexnjriyvmt.supabase.co/storage/v1/object/public/updates/" +
-                newImg?.path!.split("?t")[0] +
-                `?t=${updateTime}`;
+              if (article?.image?.includes(props.originalImage)) {
+                const index = article.image.indexOf(props.originalImage);
+                newImages[index] =
+                  "https://ouuvrfmbebexnjriyvmt.supabase.co/storage/v1/object/public/updates/" +
+                  newImg?.path!.split("?t")[0] +
+                  `?t=${updateTime}`;
+              }
+
+              const { data: imgUrl } = await supabase
+                .from("updates")
+                .update({ image: newImages, updated_at: updateTime })
+                .eq("id", props.id);
+
+              router.replace(router.asPath);
+
+              props.setModalOpened(false);
+              props.setOpened(false);
+
+              showNotification({
+                title: "Updated update",
+                message: "Your update was updated.",
+                icon: <IconCheck />,
+                color: "green",
+                autoClose: 2000,
+              });
+            } else {
+              setLoading(true);
+              const { data: imageInfo } = await supabase
+                .from("gallery")
+                .select()
+                .eq("id", props.id)
+                .single();
+
+              const updateTime = new Date(Date.now()).toISOString();
+
+              const { data: newImg } = await supabase.storage
+                .from("gallery")
+                .update(
+                  `${decodeURIComponent(
+                    props.originalImage.split("/")[
+                      props.originalImage.split("/").length - 1
+                    ]
+                  )}`,
+                  files[0],
+                  {
+                    cacheControl: "31536000",
+                  }
+                );
+
+              const { data: imgUrl } = await supabase
+                .from("gallery")
+                .update({
+                  image:
+                    "https://ouuvrfmbebexnjriyvmt.supabase.co/storage/v1/object/public/gallery/" +
+                    newImg?.path!.split("?t")[0] +
+                    `?t=${updateTime}`,
+                  updated_at: updateTime,
+                })
+                .eq("id", props.id);
+
+              router.replace(router.asPath);
+
+              props.setModalOpened(false);
+              props.setOpened(false);
+
+              showNotification({
+                title: "Updated image",
+                message: "Your gallery was updated.",
+                icon: <IconCheck />,
+                color: "green",
+                autoClose: 2000,
+              });
             }
-
-            const { data: imgUrl } = await supabase
-              .from("updates")
-              .update({ image: newImages, updated_at: updateTime })
-              .eq("id", props.id);
-
-              
-            router.replace(router.asPath);
-
-            props.setModalOpened(false);
-            props.setOpened(false);
-
-            showNotification({
-              title: "Updated update",
-              message: "Your update was updated.",
-              icon: <IconCheck />,
-              color: "green",
-              autoClose: 2000,
-            });
           }}
         >
           Save Changes
