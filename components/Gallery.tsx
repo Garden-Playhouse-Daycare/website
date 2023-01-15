@@ -43,14 +43,14 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Card({ image }: Gallery) {
+function Card(image: Gallery) {
   const { classes } = useStyles();
 
   return (
     <Paper shadow="md" className={classes.card}>
       <Image
-        src={image!}
-        alt={"An image depicting a holiday"}
+        src={image.image}
+        alt={image.alt}
         height="0"
         width="0"
         sizes="25vw"

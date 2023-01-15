@@ -11,16 +11,22 @@ export interface Database {
     Tables: {
       gallery: {
         Row: {
+          alt: string
+          created: string
           id: number
-          image: string | null
+          image: string
         }
         Insert: {
+          alt?: string
+          created?: string
           id?: number
-          image?: string | null
+          image: string
         }
         Update: {
+          alt?: string
+          created?: string
           id?: number
-          image?: string | null
+          image?: string
         }
       }
       reviews: {

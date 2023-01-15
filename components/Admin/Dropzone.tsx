@@ -92,7 +92,7 @@ export function DropzoneButton(props: Props) {
           onDrop={(file) => setFiles([...files, ...file])}
           className={classes.dropzone}
           radius="md"
-          accept={[MIME_TYPES.jpeg, MIME_TYPES.png]}
+          accept={[MIME_TYPES.jpeg, MIME_TYPES.png, MIME_TYPES.webp]}
           maxSize={10 * 1024 ** 2}
         >
           <div style={{ pointerEvents: "none" }}>
@@ -205,6 +205,7 @@ export function DropzoneButton(props: Props) {
               .update({ image: newImages, updated_at: updateTime })
               .eq("id", props.id);
 
+              
             router.replace(router.asPath);
 
             props.setModalOpened(false);

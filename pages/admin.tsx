@@ -38,7 +38,6 @@ export default function Admin({
   updateData,
   reviewData,
   galleryData,
-  updateTags,
 }: DataProps) {
   const router = useRouter();
   const supabase = useSupabaseClient<Database>();
@@ -95,7 +94,6 @@ export default function Admin({
           <meta name="robots" content="noindex" />
         </Head>
         <Dashboard
-          updateTags={updateTags}
           updateData={updateData}
           reviewData={reviewData}
           galleryData={galleryData}
@@ -113,16 +111,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     .select()
     .order("date", { ascending: false });
 
-  const { data: tagData } = await supabase.from("update_tags").select();
-
   const { data: reviewData } = await supabase.from("reviews").select();
 
-  const { data: galleryData } = await supabase.from("gallery").select();
+  const { data: galleryData } = await supabase.from("gallery").select().order("created", { ascending: false })
 
   return {
     props: {
       updateData: updateData ?? [],
-      updateTags: tagData ?? [],
       reviewData: reviewData ?? [],
       galleryData: galleryData ?? [],
     },

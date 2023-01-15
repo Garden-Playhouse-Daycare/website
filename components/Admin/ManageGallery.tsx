@@ -17,18 +17,21 @@ import {
   Stack,
   Title,
   Box,
+  TextInput,
 } from "@mantine/core";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { Database } from "../../lib/database.types";
 import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
-import { IconEdit, IconInfoCircle, IconCirclePlus } from "@tabler/icons";
+import { IconEdit, IconInfoCircle, IconCirclePlus, IconCheck } from "@tabler/icons";
 import { DropzoneButton } from "./Dropzone";
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import { AddDropzone } from "./AddDropzone";
+import { Gallery } from "../Gallery";
+import { showNotification } from "@mantine/notifications";
 
-type Updates = Database["public"]["Tables"]["updates"]["Row"];
+type Gallery = Database["public"]["Tables"]["gallery"]["Row"];
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   card: {
@@ -63,8 +66,18 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 
   title: {
+    textAlign: "center",
+    fontWeight: 800,
+    fontSize: 35,
+    letterSpacing: -1,
+    color: theme.colorScheme === "dark" ? theme.white : theme.black,
+    marginBottom: theme.spacing.xs,
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    fontWeight: 600,
+
+    "@media (max-width: 520px)": {
+      fontSize: 28,
+      textAlign: "center",
+    },
   },
 
   carousel: {
@@ -137,37 +150,31 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 }));
 
 interface Props {
-  updateData: Updates[] | [];
+  galleryData: Gallery[] | [];
 }
 
-export function ManageUpdates(props: Props) {
+export function ManageGallery(props: Props) {
   const { classes } = useStyles();
   const supabase = useSupabaseClient<Database>();
   const [opened, setOpened] = useState<any>(false);
   const theme = useMantineTheme();
-  const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
   const [alt, setAlt] = useState("");
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string | undefined>();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const [modalOpened, setModalOpened] = useState<any>(false);
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.md}px)`);
   const [closed, setClosed] = useState(false);
   const [add, setAdd] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  if (props.updateData.length > 0) {
-    const cards = props.updateData.map((article, index) => (
+  if (props.galleryData.length > 0) {
+    const cards = props.galleryData.map((image, index) => (
       <Card
-        key={article.id}
+        key={image.id}
         p="md"
         radius="md"
         className={classes.card}
         withBorder
-        style={
-          index < 4
-            ? { borderColor: theme.colors.green[theme.fn.primaryShade()] }
-            : undefined
-        }
       >
         <Group position="apart">
           <span></span>
@@ -175,57 +182,29 @@ export function ManageUpdates(props: Props) {
             leftIcon={<IconEdit size={17} />}
             variant="subtle"
             onClick={() => {
-              setOpened(article);
-              setTitle(article.desc!);
-              setDate(article.date!);
-              setImages(article.image!);
-              setAlt(article.alt!);
+              setOpened(image);
+              setImages(image.image);
+              setAlt(image.alt!);
             }}
           >
             Edit
           </Button>
         </Group>
-        <Carousel
-          withIndicators
-          styles={{
-            control: {
-              "&[data-inactive]": {
-                opacity: "20%",
-                cursor: "default",
-              },
-            },
-          }}
-        >
-          {article.image?.map((img) => (
-            <Carousel.Slide key={img}>
-              <div style={{ position: "relative", aspectRatio: "1920 / 1080" }}>
-                <Image
-                  src={img}
-                  priority
-                  alt={article.alt ?? "An image depicting a holiday"}
-                  height="0"
-                  width="0"
-                  sizes={!mobile ? "15vw" : "35vw"}
-                  style={{
-                    width: "100%",
-                    height: 250,
-                    objectFit: "contain",
-                  }}
-                />
-              </div>
-            </Carousel.Slide>
-          ))}
-        </Carousel>
-        <Text
-          color="dimmed"
-          size="xs"
-          transform="uppercase"
-          weight={700}
-          mt="md"
-        >
-          {article.date}
-        </Text>
-        <Text mt={5}>{article.desc}</Text>
+        <div style={{ position: "relative", aspectRatio: "1920 / 1080" }}>
+          <Image
+            src={image.image!}
+            priority
+            alt={image.alt ?? "An image depicting a holiday"}
+            height="0"
+            width="0"
+            sizes={!mobile ? "15vw" : "35vw"}
+            style={{
+              width: "100%",
+              height: 250,
+              objectFit: "contain",
+            }}
+          />
+        </div>
       </Card>
     ));
 
@@ -241,7 +220,8 @@ export function ManageUpdates(props: Props) {
           onClose={() => setClosed(true)}
           closeButtonLabel="Close tip"
         >
-          Cards in green are the one shown to the user on the home page
+          All of these images will be merged together in a carousel on the home
+          page
         </Alert>
         <Center>
           <Button
@@ -253,7 +233,7 @@ export function ManageUpdates(props: Props) {
               setAdd(true);
             }}
           >
-            Add new update
+            Add new image
           </Button>
         </Center>
         <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
@@ -265,10 +245,10 @@ export function ManageUpdates(props: Props) {
           overlayOpacity={0.1}
           onClose={() => {
             setOpened(false);
-            setImages([]);
+            setImages(undefined);
             if (add) setAdd(false);
           }}
-          title={!add ? "Edit Update" : "Add Update"}
+          title={!add ? "Edit Image" : "Add Image"}
           padding="md"
           size="xl"
           position="right"
@@ -323,23 +303,23 @@ export function ManageUpdates(props: Props) {
                 />
               </Modal>
             ) : (
-              <AddDropzone setOpened={setOpened} update={true} />
+              <AddDropzone setOpened={setOpened} update={false} />
             )}
 
             {!add && (
-              <Carousel
-                withIndicators
-                styles={{
-                  control: {
-                    "&[data-inactive]": {
-                      opacity: "20%",
-                      cursor: "default",
+              <>
+                <Carousel
+                  withIndicators
+                  styles={{
+                    control: {
+                      "&[data-inactive]": {
+                        opacity: "20%",
+                        cursor: "default",
+                      },
                     },
-                  },
-                }}
-              >
-                {images?.map((img) => (
-                  <Carousel.Slide key={img}>
+                  }}
+                >
+                  <Carousel.Slide>
                     <ActionIcon
                       color="teal"
                       style={{
@@ -348,7 +328,7 @@ export function ManageUpdates(props: Props) {
                         top: "0%",
                         zIndex: 5,
                       }}
-                      onClick={() => setModalOpened(img)}
+                      onClick={() => setModalOpened(images)}
                       variant="filled"
                       size="lg"
                     >
@@ -361,7 +341,7 @@ export function ManageUpdates(props: Props) {
                       }}
                     >
                       <Image
-                        src={img}
+                        src={images!}
                         alt={alt ?? "An image depicting a holiday"}
                         height="0"
                         width="0"
@@ -374,8 +354,54 @@ export function ManageUpdates(props: Props) {
                       />
                     </div>
                   </Carousel.Slide>
-                ))}
-              </Carousel>
+                </Carousel>
+                <TextInput
+                  mt="xl"
+                  description="This alternative text will be read to screen readers and it will describe the images. This can be used to facilitate with SEO."
+                  placeholder="Write a short summary of what the images are displaying"
+                  label="Alternative Text"
+                  withAsterisk
+                  value={alt}
+                  onChange={(e) => setAlt(e.currentTarget.value)}
+                />
+                <Button
+                  mt="xl"
+                  size="md"
+                  disabled={loading}
+                  loading={loading}
+                  onClick={async () => {
+                    setLoading(true);
+
+                    const { data: selectData } = await supabase
+                      .from("gallery")
+                      .select()
+                      .eq("image", images)
+                      .single();
+
+                    const { data, error } = await supabase
+                      .from("gallery")
+                      .update({
+                        id: selectData?.id,
+                        alt: alt,
+                      });
+
+                    if (error) console.log(error);
+
+                    setLoading(false);
+                    setOpened(false);
+
+                    showNotification({
+                      title: "Update Added",
+                      message: "Your update was successfully created.",
+                      icon: <IconCheck />,
+                      color: "green",
+                      autoClose: 2000,
+                    });
+                  }}
+                >
+                  Update Alternative Text
+                </Button>
+              </>
             )}
           </Box>
         </Drawer>

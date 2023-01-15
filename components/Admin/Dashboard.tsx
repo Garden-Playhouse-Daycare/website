@@ -17,6 +17,7 @@ import { MantineLogo } from "@mantine/ds";
 import { useMediaQuery } from "@mantine/hooks";
 import { DataProps } from "../../lib/DataProps";
 import { ManageUpdates } from "./ManageUpdates";
+import { ManageGallery } from "./ManageGallery";
 
 const months = [
   "January",
@@ -91,6 +92,7 @@ const Dashboard = (props: DataProps) => {
       }
     >
       {active == links[0] && <ManageUpdates updateData={props.updateData} />}
+      {active == links[1] && <ManageGallery galleryData={props.galleryData} />}
     </AppShell>
   );
 };
