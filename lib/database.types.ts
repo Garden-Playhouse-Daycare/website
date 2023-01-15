@@ -54,30 +54,30 @@ export interface Database {
       }
       updates: {
         Row: {
-          alt: string | null
-          date: string | null
-          desc: string | null
+          alt: string
+          date: string
+          desc: string
           id: number
-          image: string[] | null
-          tag: string | null
+          image: string[]
+          tag: string
           updated_at: string
         }
         Insert: {
-          alt?: string | null
-          date?: string | null
-          desc?: string | null
+          alt?: string
+          date: string
+          desc: string
           id?: number
-          image?: string[] | null
-          tag?: string | null
+          image: string[]
+          tag: string
           updated_at?: string
         }
         Update: {
-          alt?: string | null
-          date?: string | null
-          desc?: string | null
+          alt?: string
+          date?: string
+          desc?: string
           id?: number
-          image?: string[] | null
-          tag?: string | null
+          image?: string[]
+          tag?: string
           updated_at?: string
         }
       }

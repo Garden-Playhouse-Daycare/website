@@ -13,20 +13,27 @@ import {
   Modal,
   Alert,
   Center,
-  Paper,
-  Stack,
-  Title,
+  TextInput,
   Box,
 } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
+
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { Database } from "../../lib/database.types";
 import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
-import { IconEdit, IconInfoCircle, IconCirclePlus } from "@tabler/icons";
+import {
+  IconEdit,
+  IconInfoCircle,
+  IconCirclePlus,
+  IconCheck,
+} from "@tabler/icons";
 import { DropzoneButton } from "./Dropzone";
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import { AddDropzone } from "./AddDropzone";
+import { showNotification } from "@mantine/notifications";
+import { useRouter} from "next/router";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
@@ -146,7 +153,7 @@ export function ManageUpdates(props: Props) {
   const [opened, setOpened] = useState<any>(false);
   const theme = useMantineTheme();
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState<any>(undefined);
   const [alt, setAlt] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
@@ -154,6 +161,8 @@ export function ManageUpdates(props: Props) {
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.md}px)`);
   const [closed, setClosed] = useState(false);
   const [add, setAdd] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   if (props.updateData.length > 0) {
     const cards = props.updateData.map((article, index) => (
@@ -176,10 +185,10 @@ export function ManageUpdates(props: Props) {
             variant="subtle"
             onClick={() => {
               setOpened(article);
-              setTitle(article.desc!);
-              setDate(article.date!);
-              setImages(article.image!);
-              setAlt(article.alt!);
+              setTitle(article.desc);
+              setDate(new Date(article.date));
+              setImages(article.image);
+              setAlt(article.alt);
             }}
           >
             Edit
@@ -327,55 +336,128 @@ export function ManageUpdates(props: Props) {
             )}
 
             {!add && (
-              <Carousel
-                withIndicators
-                styles={{
-                  control: {
-                    "&[data-inactive]": {
-                      opacity: "20%",
-                      cursor: "default",
+              <>
+                <Carousel
+                  withIndicators
+                  styles={{
+                    control: {
+                      "&[data-inactive]": {
+                        opacity: "20%",
+                        cursor: "default",
+                      },
                     },
-                  },
-                }}
-              >
-                {images?.map((img) => (
-                  <Carousel.Slide key={img}>
-                    <ActionIcon
-                      color="teal"
-                      style={{
-                        position: "absolute",
-                        left: "90%",
-                        top: "0%",
-                        zIndex: 5,
-                      }}
-                      onClick={() => setModalOpened(img)}
-                      variant="filled"
-                      size="lg"
-                    >
-                      <IconEdit size={23} />
-                    </ActionIcon>
-                    <div
-                      style={{
-                        position: "relative",
-                        aspectRatio: "1920 / 1080",
-                      }}
-                    >
-                      <Image
-                        src={img}
-                        alt={alt ?? "An image depicting a holiday"}
-                        height="0"
-                        width="0"
-                        sizes="15vw"
+                  }}
+                >
+                  {images?.map((img) => (
+                    <Carousel.Slide key={img}>
+                      <ActionIcon
+                        color="teal"
                         style={{
-                          width: "100%",
-                          height: 250,
-                          objectFit: "contain",
+                          position: "absolute",
+                          left: "90%",
+                          top: "0%",
+                          zIndex: 5,
                         }}
-                      />
-                    </div>
-                  </Carousel.Slide>
-                ))}
-              </Carousel>
+                        onClick={() => setModalOpened(img)}
+                        variant="filled"
+                        size="lg"
+                      >
+                        <IconEdit size={23} />
+                      </ActionIcon>
+                      <div
+                        style={{
+                          position: "relative",
+                          aspectRatio: "1920 / 1080",
+                        }}
+                      >
+                        <Image
+                          src={img}
+                          alt={alt ?? "An image depicting a holiday"}
+                          height="0"
+                          width="0"
+                          sizes="15vw"
+                          style={{
+                            width: "100%",
+                            height: 250,
+                            objectFit: "contain",
+                          }}
+                        />
+                      </div>
+                    </Carousel.Slide>
+                  ))}
+                </Carousel>
+                <TextInput
+                  description="This alternative text will be read to screen readers and it will describe the images. This can be used to facilitate with SEO."
+                  placeholder="Write a short summary of what the images are displaying"
+                  label="Alternative Text"
+                  withAsterisk
+                  value={alt}
+                  onChange={(e) => setAlt(e.currentTarget.value)}
+                />
+                <TextInput
+                  placeholder="Write a caption for this update"
+                  mt="md"
+                  label="Description"
+                  withAsterisk
+                  value={title}
+                  onChange={(e) => setTitle(e.currentTarget.value)}
+                />
+                <DatePicker
+                  placeholder="Choose the date for this update"
+                  mt="md"
+                  label="Pick date"
+                  withAsterisk
+                  clearable={false}
+                  value={date}
+                  onChange={setDate}
+                  weekendDays={[]}
+                />
+                <Button
+                  mt="xl"
+                  size="md"
+                  disabled={title.length == 0 || alt.length == 0 || loading}
+                  loading={loading}
+                  onClick={async () => {
+                    setLoading(true);
+
+                    const updateDate = `${date.getFullYear()}-${String(
+                      date.getMonth() + 1
+                    ).padStart(2, "0")}-${String(date.getDate()).padStart(
+                      2,
+                      "0"
+                    )}`;
+
+                    const updateTime: string = date.toISOString();
+
+                    const { data, error } = await supabase
+                      .from("updates")
+                      .update({
+                        id: opened.id,
+                        date: updateDate,
+                        desc: title,
+                        alt: alt,
+                        updated_at: updateTime,
+                      });
+
+                    if (error) console.log(error);
+
+                    router.replace(router.asPath);
+
+                    setLoading(false);
+                    setOpened(false);
+
+                    showNotification({
+                      title: "Update Added",
+                      message: "Your update was successfully created.",
+                      icon: <IconCheck />,
+                      color: "green",
+                      autoClose: 2000,
+                    });
+                  }}
+                >
+                  Add Update
+                </Button>
+              </>
             )}
           </Box>
         </Drawer>

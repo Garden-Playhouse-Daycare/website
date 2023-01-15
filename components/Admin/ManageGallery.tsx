@@ -23,13 +23,19 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { Database } from "../../lib/database.types";
 import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
-import { IconEdit, IconInfoCircle, IconCirclePlus, IconCheck } from "@tabler/icons";
+import {
+  IconEdit,
+  IconInfoCircle,
+  IconCirclePlus,
+  IconCheck,
+} from "@tabler/icons";
 import { DropzoneButton } from "./Dropzone";
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import { AddDropzone } from "./AddDropzone";
 import { Gallery } from "../Gallery";
 import { showNotification } from "@mantine/notifications";
+import { useRouter } from "next/router";
 
 type Gallery = Database["public"]["Tables"]["gallery"]["Row"];
 
@@ -166,6 +172,7 @@ export function ManageGallery(props: Props) {
   const [closed, setClosed] = useState(false);
   const [add, setAdd] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   if (props.galleryData.length > 0) {
     const cards = props.galleryData.map((image, index) => (
@@ -389,6 +396,8 @@ export function ManageGallery(props: Props) {
 
                     setLoading(false);
                     setOpened(false);
+
+                    router.replace(router.asPath);
 
                     showNotification({
                       title: "Update Added",
