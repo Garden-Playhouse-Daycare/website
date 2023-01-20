@@ -19,7 +19,7 @@ import {
 import { DatePicker } from "@mantine/dates";
 
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Database } from "../../lib/database.types";
 import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
 import {
@@ -33,7 +33,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import { AddDropzone } from "./AddDropzone";
 import { showNotification } from "@mantine/notifications";
-import { useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 type Updates = Database["public"]["Tables"]["updates"]["Row"];
 
@@ -158,14 +158,20 @@ export function ManageUpdates(props: Props) {
   const [images, setImages] = useState<string[]>([]);
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const [modalOpened, setModalOpened] = useState<any>(false);
+  const [deleteModalOpened, setDeleteModalOpened] = useState(false);
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.md}px)`);
   const [closed, setClosed] = useState(false);
   const [add, setAdd] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [updateData, setUpdateData] = useState(props.updateData);
 
-  if (props.updateData.length > 0) {
-    const cards = props.updateData.map((article, index) => (
+  useEffect(() => {
+    setUpdateData(props.updateData);
+  }, [props.updateData]);
+
+  if (updateData.length > 0) {
+    const cards = updateData.map((article, index) => (
       <Card
         key={article.id}
         p="md"
@@ -183,7 +189,8 @@ export function ManageUpdates(props: Props) {
           <Button
             leftIcon={<IconEdit size={17} />}
             variant="subtle"
-            onClick={() => {
+            onClick={(e) => {
+              setAdd(false);
               setOpened(article);
               setTitle(article.desc);
               setDate(new Date(article.date));
@@ -299,39 +306,108 @@ export function ManageUpdates(props: Props) {
           {/* The box component is for scrolling on drawer. PX is to add padding on to the content, the MX is to offset the padding on the actual drawer (title component and other meta-drawer components) */}
           <Box sx={{ flexGrow: 1, overflow: "auto" }} px="xl" mx={-16}>
             {!add ? (
-              <Modal
-                opened={modalOpened}
-                onClose={() => {
-                  setModalOpened(false);
-                }}
-                title="Edit this image"
-              >
-                <div
-                  style={{ position: "relative", aspectRatio: "1920 / 1080" }}
+              <>
+                <Modal
+                  opened={modalOpened}
+                  onClose={() => {
+                    setModalOpened(false);
+                  }}
+                  title="Edit this image"
                 >
-                  <Image
-                    src={modalOpened}
-                    alt={alt ?? "An image depicting crafts and an holiday"}
-                    height="0"
-                    width="0"
-                    sizes="15vw"
-                    style={{
-                      width: "100%",
-                      height: 250,
-                      objectFit: "contain",
-                      borderRadius: 16,
-                      marginBottom: 16,
-                    }}
+                  <div
+                    style={{ position: "relative", aspectRatio: "1920 / 1080" }}
+                  >
+                    <Image
+                      src={modalOpened}
+                      alt={alt ?? "An image depicting crafts and an holiday"}
+                      height="0"
+                      width="0"
+                      sizes="15vw"
+                      style={{
+                        width: "100%",
+                        height: 250,
+                        objectFit: "contain",
+                        borderRadius: 16,
+                        marginBottom: 16,
+                      }}
+                    />
+                  </div>
+                  <DropzoneButton
+                    id={opened.id}
+                    setModalOpened={setModalOpened}
+                    originalImage={modalOpened}
+                    setOpened={setOpened}
+                    update={true}
                   />
-                </div>
-                <DropzoneButton
-                  id={opened.id}
-                  setModalOpened={setModalOpened}
-                  originalImage={modalOpened}
-                  setOpened={setOpened}
-                  update={true}
-                />
-              </Modal>
+                </Modal>
+                <Modal
+                  opened={deleteModalOpened}
+                  onClose={() => {
+                    setDeleteModalOpened(false);
+                  }}
+                  title="Warning"
+                >
+                  <Text align="center">
+                    Are you sure you want to delete this update? This action
+                    cannot be reverted.
+                  </Text>
+                  <Group grow mt="xl">
+                    <Button
+                      variant="outline"
+                      color="dark"
+                      onClick={() => setDeleteModalOpened(false)}
+                    >
+                      No
+                    </Button>
+                    <Button
+                      color="red"
+                      loading={loading}
+                      onClick={async () => {
+                        setLoading(true);
+                        const { data: selectData } = await supabase
+                          .from("updates")
+                          .select()
+                          .eq("id", opened.id)
+                          .single();
+
+                        const images = selectData!.image.map(
+                          (image) =>
+                            image.split(
+                              "https://ouuvrfmbebexnjriyvmt.supabase.co/storage/v1/object/public/updates/"
+                            )[1]
+                        );
+
+                        const { data, error } = await supabase.storage
+                          .from("updates")
+                          .remove(images);
+
+                        if (!error) {
+                          const { data, error } = await supabase
+                            .from("updates")
+                            .delete()
+                            .eq("id", opened.id);
+                        }
+
+                        setDeleteModalOpened(false);
+                        setOpened(false);
+                        setLoading(false);
+
+                        router.replace(router.asPath);
+
+                        showNotification({
+                          title: "Deleted update",
+                          message: "Your update was successfully deleted.",
+                          icon: <IconCheck />,
+                          color: "green",
+                          autoClose: 2000,
+                        });
+                      }}
+                    >
+                      Yes
+                    </Button>
+                  </Group>
+                </Modal>
+              </>
             ) : (
               <AddDropzone setOpened={setOpened} update={true} />
             )}
@@ -413,51 +489,60 @@ export function ManageUpdates(props: Props) {
                   onChange={setDate}
                   weekendDays={[]}
                 />
-                <Button
-                  mt="xl"
-                  size="md"
-                  disabled={title.length == 0 || alt.length == 0 || loading}
-                  loading={loading}
-                  onClick={async () => {
-                    setLoading(true);
+                <Group mt="xl" position="apart">
+                  <Button
+                    size="md"
+                    variant="outline"
+                    color="red"
+                    onClick={() => setDeleteModalOpened(true)}
+                  >
+                    Delete Update
+                  </Button>
+                  <Button
+                    size="md"
+                    disabled={title.length == 0 || alt.length == 0 || loading}
+                    loading={loading}
+                    onClick={async () => {
+                      setLoading(true);
 
-                    const updateDate = `${date.getFullYear()}-${String(
-                      date.getMonth() + 1
-                    ).padStart(2, "0")}-${String(date.getDate()).padStart(
-                      2,
-                      "0"
-                    )}`;
+                      const updateDate = `${date.getFullYear()}-${String(
+                        date.getMonth() + 1
+                      ).padStart(2, "0")}-${String(date.getDate()).padStart(
+                        2,
+                        "0"
+                      )}`;
 
-                    const updateTime: string = date.toISOString();
+                      const updateTime: string = date.toISOString();
 
-                    const { data, error } = await supabase
-                      .from("updates")
-                      .update({
-                        id: opened.id,
-                        date: updateDate,
-                        desc: title,
-                        alt: alt,
-                        updated_at: updateTime,
+                      const { data, error } = await supabase
+                        .from("updates")
+                        .update({
+                          id: opened.id,
+                          date: updateDate,
+                          desc: title,
+                          alt: alt,
+                          updated_at: updateTime,
+                        });
+
+                      if (error) console.log(error);
+
+                      router.replace(router.asPath);
+
+                      setLoading(false);
+                      setOpened(false);
+
+                      showNotification({
+                        title: "Update Added",
+                        message: "Your update was successfully created.",
+                        icon: <IconCheck />,
+                        color: "green",
+                        autoClose: 2000,
                       });
-
-                    if (error) console.log(error);
-
-                    router.replace(router.asPath);
-
-                    setLoading(false);
-                    setOpened(false);
-
-                    showNotification({
-                      title: "Update Added",
-                      message: "Your update was successfully created.",
-                      icon: <IconCheck />,
-                      color: "green",
-                      autoClose: 2000,
-                    });
-                  }}
-                >
-                  Add Update
-                </Button>
+                    }}
+                  >
+                    {add ? "Add Update" : "Edit Update"}
+                  </Button>
+                </Group>
               </>
             )}
           </Box>
