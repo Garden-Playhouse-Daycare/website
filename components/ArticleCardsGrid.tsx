@@ -4,7 +4,7 @@ import {
   Card,
   Text,
   Container,
-  AspectRatio,
+  Button,
   Loader,
   Center,
   Paper,
@@ -145,6 +145,16 @@ export function ArticlesCardsGrid(props: Props) {
         <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
           {cards}
         </SimpleGrid>
+        <Group position="center" mt="xl">
+          <Button
+            size="lg"
+            component="a"
+            target="_blank"
+            href="https://www.google.com/search?q=garden+playhouse+daycare&oq=garden+playhouse+&aqs=chrome.0.69i59j69i57j69i59l2j69i60j69i61j69i60.4004j0j1&sourceid=chrome&ie=UTF-8#ip=1&lpstate=pid:-1"
+          >
+            See more updates
+          </Button>
+        </Group>
       </Container>
     );
   } else {

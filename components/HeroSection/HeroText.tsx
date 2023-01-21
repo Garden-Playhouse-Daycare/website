@@ -124,13 +124,29 @@ export function HeroText(props: Props) {
 
         <Container p={0} size={600}>
           <Text size="lg" color="dimmed" className={classes.description}>
-            Family Child Care in Fremont <br />Opening at 8:30 AM on Monday
+            Family Child Care in Fremont <br />
+            Opening at 8:30 AM on Monday
           </Text>
         </Container>
 
         <div className={classes.controls}>
-          <Button component="a" href="#contact" className={classes.control} size="lg">
+          <Button
+            component="a"
+            href="#contact"
+            className={classes.control}
+            size="lg"
+          >
             Contact Us
+          </Button>
+          <Button
+            component="a"
+            href="https://www.yelp.com/biz/garden-playhouse-daycare-fremont?osq=Garden+Playhouse+Daycare"
+            variant="outline"
+            target="_blank"
+            className={classes.control}
+            size="lg"
+          >
+            Yelp Page
           </Button>
         </div>
       </div>
