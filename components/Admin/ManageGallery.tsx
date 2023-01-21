@@ -167,6 +167,7 @@ export function ManageGallery(props: Props) {
   const [alt, setAlt] = useState("");
   const [images, setImages] = useState<string | undefined>();
   const mobileMatch = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
+  const [deleteModalOpened, setDeleteModalOpened] = useState(false);
   const [modalOpened, setModalOpened] = useState<any>(false);
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.md}px)`);
   const [closed, setClosed] = useState(false);
@@ -189,6 +190,7 @@ export function ManageGallery(props: Props) {
             leftIcon={<IconEdit size={17} />}
             variant="subtle"
             onClick={() => {
+              setAdd(false);
               setOpened(image);
               setImages(image.image);
               setAlt(image.alt!);
@@ -277,39 +279,105 @@ export function ManageGallery(props: Props) {
           {/* The box component is for scrolling on drawer. PX is to add padding on to the content, the MX is to offset the padding on the actual drawer (title component and other meta-drawer components) */}
           <Box sx={{ flexGrow: 1, overflow: "auto" }} px="xl" mx={-16}>
             {!add ? (
-              <Modal
-                opened={modalOpened}
-                onClose={() => {
-                  setModalOpened(false);
-                }}
-                title="Edit this image"
-              >
-                <div
-                  style={{ position: "relative", aspectRatio: "1920 / 1080" }}
+              <>
+                <Modal
+                  opened={modalOpened}
+                  onClose={() => {
+                    setModalOpened(false);
+                  }}
+                  title="Edit this image"
                 >
-                  <Image
-                    src={modalOpened}
-                    alt={alt ?? "An image depicting crafts and an holiday"}
-                    height="0"
-                    width="0"
-                    sizes="15vw"
-                    style={{
-                      width: "100%",
-                      height: 250,
-                      objectFit: "contain",
-                      borderRadius: 16,
-                      marginBottom: 16,
-                    }}
+                  <div
+                    style={{ position: "relative", aspectRatio: "1920 / 1080" }}
+                  >
+                    <Image
+                      src={modalOpened}
+                      alt={alt ?? "An image depicting crafts and an holiday"}
+                      height="0"
+                      width="0"
+                      sizes="15vw"
+                      style={{
+                        width: "100%",
+                        height: 250,
+                        objectFit: "contain",
+                        borderRadius: 16,
+                        marginBottom: 16,
+                      }}
+                    />
+                  </div>
+                  <DropzoneButton
+                    update={false}
+                    id={opened.id}
+                    setModalOpened={setModalOpened}
+                    originalImage={modalOpened}
+                    setOpened={setOpened}
                   />
-                </div>
-                <DropzoneButton
-                  update={false}
-                  id={opened.id}
-                  setModalOpened={setModalOpened}
-                  originalImage={modalOpened}
-                  setOpened={setOpened}
-                />
-              </Modal>
+                </Modal>
+                <Modal
+                  opened={deleteModalOpened}
+                  onClose={() => {
+                    setDeleteModalOpened(false);
+                  }}
+                  title="Warning"
+                >
+                  <Text align="center">
+                    Are you sure you want to delete this image? This action
+                    cannot be reverted.
+                  </Text>
+                  <Group grow mt="xl">
+                    <Button
+                      variant="outline"
+                      color="dark"
+                      onClick={() => setDeleteModalOpened(false)}
+                    >
+                      No
+                    </Button>
+                    <Button
+                      color="red"
+                      loading={loading}
+                      onClick={async () => {
+                        setLoading(true);
+                        const { data: selectData } = await supabase
+                          .from("gallery")
+                          .select()
+                          .eq("id", opened.id)
+                          .single();
+
+                        const images = selectData!.image.split(
+                          "https://ouuvrfmbebexnjriyvmt.supabase.co/storage/v1/object/public/gallery/"
+                        )[1];
+
+                        const { data, error } = await supabase.storage
+                          .from("gallery")
+                          .remove([images]);
+
+                        if (!error) {
+                          const { data, error } = await supabase
+                            .from("gallery")
+                            .delete()
+                            .eq("id", opened.id);
+                        }
+
+                        setDeleteModalOpened(false);
+                        setOpened(false);
+                        setLoading(false);
+
+                        router.replace(router.asPath);
+
+                        showNotification({
+                          title: "Deleted image",
+                          message: "Your image was successfully deleted.",
+                          icon: <IconCheck />,
+                          color: "green",
+                          autoClose: 2000,
+                        });
+                      }}
+                    >
+                      Yes
+                    </Button>
+                  </Group>
+                </Modal>
+              </>
             ) : (
               <AddDropzone setOpened={setOpened} update={false} />
             )}
@@ -372,45 +440,54 @@ export function ManageGallery(props: Props) {
                   value={alt}
                   onChange={(e) => setAlt(e.currentTarget.value)}
                 />
-                <Button
-                  mt="xl"
-                  size="md"
-                  disabled={loading}
-                  loading={loading}
-                  onClick={async () => {
-                    setLoading(true);
+                <Group mt="xl" position="apart">
+                  <Button
+                    size="md"
+                    variant="outline"
+                    color="red"
+                    onClick={() => setDeleteModalOpened(true)}
+                  >
+                    Delete Image
+                  </Button>
+                  <Button
+                    size="md"
+                    disabled={loading}
+                    loading={loading}
+                    onClick={async () => {
+                      setLoading(true);
 
-                    const { data: selectData } = await supabase
-                      .from("gallery")
-                      .select()
-                      .eq("image", images)
-                      .single();
+                      const { data: selectData } = await supabase
+                        .from("gallery")
+                        .select()
+                        .eq("image", images)
+                        .single();
 
-                    const { data, error } = await supabase
-                      .from("gallery")
-                      .update({
-                        id: selectData?.id,
-                        alt: alt,
+                      const { data, error } = await supabase
+                        .from("gallery")
+                        .update({
+                          id: selectData?.id,
+                          alt: alt,
+                        });
+
+                      if (error) console.log(error);
+
+                      setLoading(false);
+                      setOpened(false);
+
+                      router.replace(router.asPath);
+
+                      showNotification({
+                        title: "Update Added",
+                        message: "Your update was successfully created.",
+                        icon: <IconCheck />,
+                        color: "green",
+                        autoClose: 2000,
                       });
-
-                    if (error) console.log(error);
-
-                    setLoading(false);
-                    setOpened(false);
-
-                    router.replace(router.asPath);
-
-                    showNotification({
-                      title: "Update Added",
-                      message: "Your update was successfully created.",
-                      icon: <IconCheck />,
-                      color: "green",
-                      autoClose: 2000,
-                    });
-                  }}
-                >
-                  Update Alternative Text
-                </Button>
+                    }}
+                  >
+                    Update Alternative Text
+                  </Button>
+                </Group>
               </>
             )}
           </Box>
