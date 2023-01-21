@@ -12,6 +12,8 @@ import {
   IconLogout,
 } from "@tabler/icons";
 import { MantineLogo } from "@mantine/ds";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -106,8 +108,10 @@ interface Props {
 
 export function SimpleNavbar(props: Props) {
   const { classes, cx } = useStyles();
-  
+  const router = useRouter();
+
   const currentDate = new Date();
+  const supabase = useSupabaseClient();
 
   const links = data.map((item) => (
     <a
@@ -136,9 +140,7 @@ export function SimpleNavbar(props: Props) {
       p="md"
       className={classes.navbar}
     >
-      <Navbar.Section grow>
-        {links}
-      </Navbar.Section>
+      <Navbar.Section grow>{links}</Navbar.Section>
 
       <Navbar.Section className={classes.footer}>
         <a
@@ -153,7 +155,11 @@ export function SimpleNavbar(props: Props) {
         <a
           href="#"
           className={classes.link}
-          onClick={(event) => event.preventDefault()}
+          onClick={async (event) => {
+            event.preventDefault();
+            const { error } = await supabase.auth.signOut();
+            router.push("/");
+          }}
         >
           <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Logout</span>
