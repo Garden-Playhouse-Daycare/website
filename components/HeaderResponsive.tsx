@@ -30,6 +30,7 @@ import {
   IconChevronDown,
 } from "@tabler/icons";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -149,6 +150,7 @@ export function HeaderResponsive() {
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
   const mobileMatch = useMediaQuery("(max-width: 565px)");
+  const router = useRouter();
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
@@ -172,7 +174,13 @@ export function HeaderResponsive() {
     <Box pb={!mobileMatch ? 120 : 100}>
       <Header height={60} px="md" fixed>
         <Group position="apart" sx={{ height: "100%" }}>
-          <Logo height={38} />
+          {router.pathname != "/" ? (
+            <Link href={"/"} aria-label="Garden Playhouse's Logo">
+              <Logo height={38} />
+            </Link>
+          ) : (
+            <Logo height={38} />
+          )}
 
           <Group
             sx={{ height: "100%" }}
@@ -182,25 +190,52 @@ export function HeaderResponsive() {
             <Link href="/" className={classes.link} replace>
               Home
             </Link>
-            <Link href="/#updates" className={classes.link} scroll={false} replace>
+            <Link
+              href="/#updates"
+              className={classes.link}
+              scroll={false}
+              replace
+            >
               Updates
             </Link>
-            <Link href="/#testimonials" className={classes.link} scroll={false} replace>
+            <Link
+              href="/#testimonials"
+              className={classes.link}
+              scroll={false}
+              replace
+            >
               Testimonials
             </Link>
-            <Link href="/#about" className={classes.link} scroll={false} replace>
+            <Link
+              href="/#about"
+              className={classes.link}
+              scroll={false}
+              replace
+            >
               About us
             </Link>
-            <Link href="/#gallery" className={classes.link} scroll={false} replace>
+            <Link
+              href="/#gallery"
+              className={classes.link}
+              scroll={false}
+              replace
+            >
               Gallery
             </Link>
-            <Link href="/#contact" className={classes.link} scroll={false} replace>
+            <Link
+              href="/#contact"
+              className={classes.link}
+              scroll={false}
+              replace
+            >
               Contact
             </Link>
           </Group>
 
           <Group className={classes.hiddenMobile}>
-            <Button component="a" href="/#contact">Contact Us</Button>
+            <Button component="a" href="/#contact">
+              Contact Us
+            </Button>
           </Group>
 
           <Burger
@@ -216,28 +251,65 @@ export function HeaderResponsive() {
         opened={drawerOpened}
         onClose={closeDrawer}
         size="100%"
-        classNames={{ header: classes.header, closeButton: classes.closeButton }}
+        classNames={{
+          header: classes.header,
+          closeButton: classes.closeButton,
+        }}
         className={classes.hiddenDesktop}
         zIndex={1000000}
         padding="md"
       >
-        <ScrollArea sx={{ height: "calc(100vh - 60px)" }} mx="-md" style={{ zIndex: -5}}>
+        <ScrollArea
+          sx={{ height: "calc(100vh - 60px)" }}
+          mx="-md"
+          style={{ zIndex: -5 }}
+        >
           <Link href="/" className={classes.link} onClick={closeDrawer} replace>
             Home
           </Link>
-          <Link href="#updates" className={classes.link} scroll={false} replace onClick={closeDrawer}>
+          <Link
+            href="#updates"
+            className={classes.link}
+            scroll={false}
+            replace
+            onClick={closeDrawer}
+          >
             Updates
           </Link>
-          <Link href="#testimonials" className={classes.link} scroll={false} replace onClick={closeDrawer}>
+          <Link
+            href="#testimonials"
+            className={classes.link}
+            scroll={false}
+            replace
+            onClick={closeDrawer}
+          >
             Testimonials
           </Link>
-          <Link href="#about" className={classes.link} scroll={false} replace onClick={closeDrawer}>
+          <Link
+            href="#about"
+            className={classes.link}
+            scroll={false}
+            replace
+            onClick={closeDrawer}
+          >
             About us
           </Link>
-          <Link href="#gallery" className={classes.link} scroll={false} replace onClick={closeDrawer}>
+          <Link
+            href="#gallery"
+            className={classes.link}
+            scroll={false}
+            replace
+            onClick={closeDrawer}
+          >
             Gallery
           </Link>
-          <Link href="#contact" className={classes.link} scroll={false} replace onClick={closeDrawer}>
+          <Link
+            href="#contact"
+            className={classes.link}
+            scroll={false}
+            replace
+            onClick={closeDrawer}
+          >
             Contact
           </Link>
 
