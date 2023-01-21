@@ -27,7 +27,7 @@ export default async function handler(
         name: req.body.name,
       },
       subject: `New message from Garden Playhouse: ${req.body.subject}`,
-      html: `<p>Hey Sarika,<br />You've received a message from ${req.body.name}. Below is the message:<br /><br />${req.body.message}<br /><br />The email address of this person is: ${req.body.email}</p>`,
+      html: `<p>Hey Sarika,<br />You've received a message from ${req.body.name}. Below is the message:<br /><br />${req.body.message}<br /><br />The email address of this person is: <i>${req.body.email}</i><br />The phone number of this person is: <i>${req.body.phone}</i></p>`,
     };
 
     try {

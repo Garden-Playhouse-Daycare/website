@@ -148,6 +148,7 @@ export function Contact() {
               message: message,
               email: email,
               name: name,
+              phone: phone,
             };
 
             const response = await fetch("/api/sendMessage", {
