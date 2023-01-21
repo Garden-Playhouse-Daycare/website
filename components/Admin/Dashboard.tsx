@@ -19,21 +19,6 @@ import { DataProps } from "../../lib/DataProps";
 import { ManageUpdates } from "./ManageUpdates";
 import { ManageGallery } from "./ManageGallery";
 
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 const useStyles = createStyles((theme) => ({
   headerContainer: {
     backgroundColor: theme.fn.variant({
@@ -55,7 +40,7 @@ const useStyles = createStyles((theme) => ({
 }));
 const Dashboard = (props: DataProps) => {
   const [opened, setOpened] = useState(false);
-  const links = ["Manage updates", "Manage gallery", "Manage testimonials"]
+  const links = ["Manage updates", "Manage gallery"]
   const [active, setActive] = useState(links[0]);
   const currentDate = new Date();
   const { classes } = useStyles();
