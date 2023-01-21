@@ -120,6 +120,7 @@ export function Contact() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [phone, setPhone] = useState("");
 
   return (
     <Paper radius="lg" mb="xl">
@@ -182,6 +183,7 @@ export function Contact() {
             setMessage("");
             setName("");
             setSubject("");
+            setPhone("");
             Router.replace("/");
           }}
           method="post"
@@ -191,7 +193,7 @@ export function Contact() {
           </Text>
 
           <div className={classes.fields}>
-            <SimpleGrid cols={2} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
+            <SimpleGrid cols={3} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
               <TextInput
                 label="Your name"
                 required
@@ -206,6 +208,15 @@ export function Contact() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextInput
+                label="Your phone number"
+                placeholder="999-999-9999"
+                required
+                type="tel"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
               />
             </SimpleGrid>
 

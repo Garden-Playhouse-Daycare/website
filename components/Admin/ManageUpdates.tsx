@@ -189,7 +189,7 @@ export function ManageUpdates(props: Props) {
           <Button
             leftIcon={<IconEdit size={17} />}
             variant="subtle"
-            onClick={(e) => {
+            onClick={() => {
               setAdd(false);
               setOpened(article);
               setTitle(article.desc);
