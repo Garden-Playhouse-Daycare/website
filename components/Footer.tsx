@@ -55,23 +55,23 @@ export function Footer({ links, top }: FooterSimpleProps) {
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
-        <Link href="/" aria-label="Garden Playhouse Daycare's Logo">
-          <Logo height={37} />
-        </Link>
         <Group className={classes.links}>
+          <Link href="/" aria-label="Garden Playhouse Daycare's Logo">
+            <Logo height={37} />
+          </Link>
           <Link
             href="https://www.yelp.com/biz/garden-playhouse-daycare-fremont?osq=Garden+Playhouse+Daycare"
             target="_blank"
             aria-label="Garden Playhouse Daycare's Yelp Link"
           >
-            <Image src="/yelp.svg" alt="Yelp Logo" width="40" height="40" />
+            <Image src="/yelp.svg" alt="Yelp Logo" width="35" height="35" />
           </Link>
           <Link
             href="https://www.google.com/search?q=garden+playhouse+daycare&oq=garden+playhouse&aqs=chrome.0.69i59l3j69i60l2j69i61.2548j0j1&sourceid=chrome&ie=UTF-8#ip=1"
             target="_blank"
             aria-label="Garden Playhouse Daycare's Yelp Link"
           >
-            <Image src="/google.svg" alt="Google Logo" width="40" height="40" />
+            <Image src="/google.svg" alt="Google Logo" width="35" height="35" />
           </Link>
         </Group>
         <Group className={classes.links}>{items}</Group>
