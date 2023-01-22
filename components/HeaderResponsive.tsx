@@ -214,14 +214,14 @@ export function HeaderResponsive() {
             >
               About us
             </Link>
-            <Link
+            {/* <Link
               href="/#gallery"
               className={classes.link}
               scroll={false}
               replace
             >
               Gallery
-            </Link>
+            </Link> */}
             <Link
               href="/#contact"
               className={classes.link}
@@ -294,7 +294,7 @@ export function HeaderResponsive() {
           >
             About us
           </Link>
-          <Link
+          {/* <Link
             href="#gallery"
             className={classes.link}
             scroll={false}
@@ -302,7 +302,7 @@ export function HeaderResponsive() {
             onClick={closeDrawer}
           >
             Gallery
-          </Link>
+          </Link> */}
           <Link
             href="#contact"
             className={classes.link}
