@@ -1,4 +1,4 @@
-import { Carousel } from "@mantine/carousel";
+import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
 import { useMediaQuery } from "@mantine/hooks";
 import {
   createStyles,
@@ -12,6 +12,7 @@ import {
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../lib/database.types";
 import Image from "next/image";
+import { useState } from "react";
 
 type Gallery = Database["public"]["Tables"]["gallery"]["Row"];
 
@@ -72,6 +73,10 @@ interface Props {
 export function Gallery(props: Props) {
   const theme = useMantineTheme();
   const supabase = useSupabaseClient();
+  const [embla, setEmbla] = useState<Embla | null>(null);
+
+  const TRANSITION_DURATION = 200;
+  useAnimationOffsetEffect(embla, TRANSITION_DURATION);
 
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
   const slides = props.data.map((row) => (
@@ -82,13 +87,13 @@ export function Gallery(props: Props) {
 
   return (
     <Carousel
-      slideSize="50%"
-      breakpoints={[{ maxWidth: "sm", slideSize: "100%", slideGap: 2 }]}
+      slideSize="100%"
       slideGap="xs"
+      getEmblaApi={setEmbla}
       align="start"
       loop
-      slidesToScroll={mobile ? 1 : 2}
-      mx={mobile ? "xl" : "7.5%"}
+      slidesToScroll={1}
+      mx={!mobile ? "25%" : "3%"}
     >
       {slides}
     </Carousel>

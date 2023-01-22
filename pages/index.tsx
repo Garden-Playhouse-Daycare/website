@@ -59,7 +59,7 @@ export default function Home({
           <meta property="og:URL" content="https://gardenplayhouse.net" />
         </Head>
         <HeaderResponsive />
-        {mobileMatch && (
+        {/* {mobileMatch && (
           <Image
             src={MainImg}
             alt="An image of the daycare and preschool showing the play area"
@@ -75,9 +75,9 @@ export default function Home({
             }}
             priority
           />
-        )}
+        )} */}
         <HeroText />
-        {!mobileMatch && (
+        {/* {!mobileMatch && (
           <Image
             src={MainImg}
             alt="An image of the daycare and preschool showing the play area"
@@ -92,7 +92,8 @@ export default function Home({
             }}
             priority
           />
-        )}
+        )} */}
+        <Gallery data={galleryData} />
 
         <Title
           mt={!mobileMatch ? 70 : 10}
@@ -135,7 +136,7 @@ export default function Home({
           />
         </Title>
         <AboutPage />
-        <Title
+        {/* <Title
           mt={!mobileMatch ? 80 : 70}
           mb="xl"
           align="center"
@@ -148,7 +149,7 @@ export default function Home({
             style={{ position: "absolute", top: "-60px", visibility: "hidden" }}
           />
         </Title>
-        <Gallery data={galleryData} />
+        <Gallery data={galleryData} /> */}
         <Title
           mt={!mobileMatch ? 90 : 90}
           mb="xl"
