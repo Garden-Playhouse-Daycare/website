@@ -131,16 +131,6 @@ export function HeroText(props: Props) {
           >
             Contact Us
           </Button>
-          <Button
-            component="a"
-            href="https://www.yelp.com/biz/garden-playhouse-daycare-fremont?osq=Garden+Playhouse+Daycare"
-            variant="outline"
-            target="_blank"
-            className={classes.control}
-            size="lg"
-          >
-            Yelp Page
-          </Button>
         </div>
       </div>
     </Container>
