@@ -96,7 +96,6 @@ const useStyles = createStyles((theme, _params, getRef) => {
 const data = [
   { link: "", label: "Manage updates", icon: IconEdit },
   { link: "", label: "Manage gallery", icon: IconPhotoEdit },
-  { link: "", label: "Manage testimonials", icon: IconStars },
 ];
 
 interface Props {
