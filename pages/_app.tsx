@@ -89,10 +89,6 @@ export default function App({
                       label: "Contact",
                     },
                     {
-                      link: "/blog",
-                      label: "Blog",
-                    },
-                    {
                       link: "/admin",
                       label: "Admin",
                     },

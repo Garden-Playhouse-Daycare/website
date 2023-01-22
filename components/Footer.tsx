@@ -2,6 +2,7 @@ import { createStyles, Container, Group, Anchor } from "@mantine/core";
 import { MantineLogo } from "@mantine/ds";
 import Link from "next/link";
 import Logo from "./Logo";
+import Image from "next/image";
 
 const useStyles = createStyles((theme) => ({
   footer: {
@@ -39,7 +40,12 @@ interface FooterSimpleProps {
 export function Footer({ links, top }: FooterSimpleProps) {
   const { classes } = useStyles();
   const items = links.map((link) => (
-    <Link href={link.link} key={link.label} legacyBehavior scroll={link.link != "/#contact" ? true : false}>
+    <Link
+      href={link.link}
+      key={link.label}
+      legacyBehavior
+      scroll={link.link != "/#contact" ? true : false}
+    >
       <Anchor color="dimmed" size="sm">
         {link.label}
       </Anchor>
@@ -49,9 +55,25 @@ export function Footer({ links, top }: FooterSimpleProps) {
   return (
     <div className={classes.footer}>
       <Container className={classes.inner}>
-        <Link href="/" aria-label="Garden Playhouse's Logo">
+        <Link href="/" aria-label="Garden Playhouse Daycare's Logo">
           <Logo height={37} />
         </Link>
+        <Group className={classes.links}>
+          <Link
+            href="https://www.yelp.com/biz/garden-playhouse-daycare-fremont?osq=Garden+Playhouse+Daycare"
+            target="_blank"
+            aria-label="Garden Playhouse Daycare's Yelp Link"
+          >
+            <Image src="/yelp.svg" alt="Yelp Logo" width="40" height="40" />
+          </Link>
+          <Link
+            href="https://www.google.com/search?q=garden+playhouse+daycare&oq=garden+playhouse&aqs=chrome.0.69i59l3j69i60l2j69i61.2548j0j1&sourceid=chrome&ie=UTF-8#ip=1"
+            target="_blank"
+            aria-label="Garden Playhouse Daycare's Yelp Link"
+          >
+            <Image src="/google.svg" alt="Google Logo" width="40" height="40" />
+          </Link>
+        </Group>
         <Group className={classes.links}>{items}</Group>
       </Container>
     </div>
