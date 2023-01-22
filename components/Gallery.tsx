@@ -1,4 +1,5 @@
 import { Carousel, Embla, useAnimationOffsetEffect } from "@mantine/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import { useMediaQuery } from "@mantine/hooks";
 import {
   createStyles,
@@ -12,7 +13,7 @@ import {
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../lib/database.types";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 type Gallery = Database["public"]["Tables"]["gallery"]["Row"];
 
@@ -74,6 +75,7 @@ export function Gallery(props: Props) {
   const theme = useMantineTheme();
   const supabase = useSupabaseClient();
   const [embla, setEmbla] = useState<Embla | null>(null);
+  const autoplay = useRef(Autoplay({ delay: 2000 }));
 
   const TRANSITION_DURATION = 200;
   useAnimationOffsetEffect(embla, TRANSITION_DURATION);
@@ -89,6 +91,7 @@ export function Gallery(props: Props) {
     <Carousel
       slideSize="100%"
       slideGap="xs"
+      plugins={[autoplay.current]}
       getEmblaApi={setEmbla}
       align="start"
       loop
