@@ -112,14 +112,7 @@ export function HeroText(props: Props) {
 
       <div className={classes.inner}>
         <Title className={classes.title}>
-          Garden Playhouse{" "}
-          <Text component="span" className={classes.highlight} inherit>
-            Day Care
-          </Text>{" "}
-          and{" "}
-          <Text component="span" className={classes.highlight} inherit>
-            Preschool
-          </Text>{" "}
+          Garden Playhouse Day Care and Preschool
         </Title>
 
         <Container p={0} size={600}>
