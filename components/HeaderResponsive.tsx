@@ -262,7 +262,7 @@ export function HeaderResponsive() {
         <ScrollArea
           sx={{ height: "calc(100vh - 60px)" }}
           mx="-md"
-          style={{ zIndex: -5 }}
+          style={{ zIndex: 10 }}
         >
           <Link href="/" className={classes.link} onClick={closeDrawer} replace>
             Home
