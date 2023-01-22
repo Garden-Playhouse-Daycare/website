@@ -211,7 +211,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     .order("date", { ascending: false })
     .limit(4);
 
-  const { data: reviewData } = await supabase.from("reviews").select();
+  const { data: reviewData } = await supabase
+    .from("reviews")
+    .select()
+    .order("date", { ascending: false });
 
   const { data: galleryData } = await supabase.from("gallery").select();
 
