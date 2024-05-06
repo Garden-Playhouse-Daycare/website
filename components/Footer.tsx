@@ -1,4 +1,11 @@
-import { createStyles, Container, Group, Anchor } from "@mantine/core";
+import {
+  createStyles,
+  Container,
+  Group,
+  Anchor,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { MantineLogo } from "@mantine/ds";
 import Link from "next/link";
 import Logo from "./Logo";
@@ -74,7 +81,12 @@ export function Footer({ links, top }: FooterSimpleProps) {
             <Image src="/google.svg" alt="Google Logo" width="35" height="35" />
           </Link>
         </Group>
-        <Group className={classes.links}>{items}</Group>
+        <Group className={classes.links}>
+          {items}
+          <Text color="dimmed" size="sm">
+          LiC: 013422277
+          </Text>
+        </Group>
       </Container>
     </div>
   );
