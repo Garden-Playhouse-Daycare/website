@@ -83,8 +83,8 @@ export function Footer({ links, top }: FooterSimpleProps) {
         </Group>
         <Group className={classes.links}>
           {items}
-          <Text color="dimmed" size="sm">
-          LiC: 013422277
+          <Text color="dimmed" size="sm" style={{ pointerEvents: "none" }}>
+            LiC: 013422277
           </Text>
         </Group>
       </Container>
