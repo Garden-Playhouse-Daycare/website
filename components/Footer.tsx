@@ -83,8 +83,18 @@ export function Footer({ links, top }: FooterSimpleProps) {
         </Group>
         <Group className={classes.links}>
           {items}
-          <Text color="dimmed" size="sm" style={{ pointerEvents: "none" }}>
-            LiC: 013422277
+          <Text
+            color="dimmed"
+            size="sm"
+            style={{
+              pointerEvents: "none",
+              textDecoration: "none",
+              color: "#868E96",
+            }}
+          >
+            <a href="tel:013422277" onClick={(event) => event.preventDefault()} style={{ textDecoration: "none", color: "#868E96", }}>
+              LiC: 013422277
+            </a>
           </Text>
         </Group>
       </Container>
