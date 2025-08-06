@@ -100,7 +100,7 @@ export function AboutPage() {
         <Grid align="flex-start" gutter="xs">
           
           {/* Image Column */}
-          <Grid.Col md={5} order={mobileMatch ? 2 : 1}>
+          <Grid.Col md={5} order={1}>
             <Image
               src={newImg}
               alt="Garden Playhouse daycare and preschool"
@@ -114,7 +114,7 @@ export function AboutPage() {
             />
           </Grid.Col>
 
-          <Grid.Col md={7} order={mobileMatch ? 1 : 2}>
+          <Grid.Col md={7} order={2}>
             <div className={classes.textSection}>
               <Text color="dimmed" size="lg" mb="md">
                 Garden playhouse is a Waldorf inspired licensed family child
