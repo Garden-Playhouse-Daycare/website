@@ -10,9 +10,10 @@ import {
   useMantineColorScheme,
   Spoiler,
   Center,
+  Grid,
 } from "@mantine/core";
 import { IconCheck } from "@tabler/icons";
-import img from "./Play.webp";
+import newImg from "./about.jpg"; // Replace with your new image
 import { useMediaQuery } from "@mantine/hooks";
 import { useEffect } from "react";
 import Image from "next/image";
@@ -74,69 +75,66 @@ const useStyles = createStyles((theme) => ({
     borderRadius: theme.radius.sm,
     padding: "4px 12px",
   },
+
+  sideImage: {
+    borderRadius: "1em",
+    width: "100%",
+    height: "auto",
+  },
+
+  textSection: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
 }));
 
 export function AboutPage() {
   const { classes } = useStyles();
   const matches = useMediaQuery("(max-width: 900px)");
-  const mobileMatch = useMediaQuery("(max-width: 565px)");
+  const mobileMatch = useMediaQuery("(max-width: 768px)");
 
   return (
     <div>
-      <Container>
-        {mobileMatch ? (
-          <Image
-            src={img}
-            alt="An image of the daycare and preschool showing the play area"
-            style={{
-              display: "block",
-              marginLeft: "auto",
-              marginRight: "auto",
-              maxWidth: "90%",
-              height: "auto",
-              borderRadius: "1em",
-              marginBottom: "2em",
-            }}
-            priority
-          />
-        ) : (
-          <Image
-            src={img}
-            alt="An image of the daycare and preschool showing the play area"
-            style={{
-              display: "block",
-              marginLeft: "auto",
-              marginRight: "auto",
-              maxWidth: "50%",
-              height: "auto",
-              borderRadius: "1em",
-            }}
-            priority
-          />
-        )}
-          <Spoiler
-            maxHeight={120}
-            showLabel="Read more"
-            hideLabel="Collapse Content"
-            style={{ "textAlign": "center"}}
-          >
-            <Text color="dimmed" align="left">
-              Garden playhouse is a Waldorf inspired licensed family child
-              care/day care/preschool located near Fremont BART. Our mission is
-              to foster creativity and imagination among children by
-              storytelling, providing natural and handmade toys and practical
-              life activities in a safe and nurturing environment which helps in
-              whole child development. Owner/Director: Sarika Rathi I have been
-              a lifelong learner, and I am passionate about creating a nurturing
-              educational environment for your child. I focus on educating the
-              whole child – mind, heart and hands – through interactive and
-              imaginative play and activities. After completing my PhD I spent
-              several years in academics and corporate jobs, but I realized what
-              I was truly passionate about was inspiring the love of education
-              in children – thus started Garden Playhouse Daycare! I look
-              forward to meeting you and your child!
-            </Text>
-          </Spoiler>
+      <Container size="lg" py="xl">
+        <Grid align="flex-start" gutter="xs">
+          
+          {/* Image Column */}
+          <Grid.Col md={5} order={mobileMatch ? 2 : 1}>
+            <Image
+              src={newImg}
+              alt="Garden Playhouse daycare and preschool"
+              className={classes.sideImage}
+              style={{
+                maxWidth: "80%",
+                height: "auto",
+                borderRadius: "1em",
+              }}
+              priority
+            />
+          </Grid.Col>
+          {/* Text Column */}
+          <Grid.Col md={7} order={mobileMatch ? 1 : 2}>
+            <div className={classes.textSection}>
+              <Text color="dimmed" size="lg" mb="md">
+                Garden playhouse is a Waldorf inspired licensed family child
+                care/day care/preschool located near Fremont BART. Our mission
+                is to foster creativity and imagination among children by
+                storytelling, providing natural and handmade toys and practical
+                life activities in a safe and nurturing environment which helps
+                in whole child development. I have been a lifelong learner, and
+                I am passionate about creating a nurturing educational
+                environment for your child. I focus on educating the whole child
+                – mind, heart and hands – through interactive and imaginative
+                play and activities. After completing my PhD I spent several
+                years in academics and corporate jobs, but I realized what I was
+                truly passionate about was inspiring the love of education in
+                children – thus started Garden Playhouse Daycare! I look forward
+                to meeting you and your child!
+              </Text>
+            </div>
+          </Grid.Col>
+        </Grid>
       </Container>
     </div>
   );
