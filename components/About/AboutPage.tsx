@@ -113,7 +113,7 @@ export function AboutPage() {
               priority
             />
           </Grid.Col>
-          {/* Text Column */}
+
           <Grid.Col md={7} order={mobileMatch ? 1 : 2}>
             <div className={classes.textSection}>
               <Text color="dimmed" size="lg" mb="md">
